@@ -520,11 +520,22 @@
 
     // Hàm hiển thị phần được chọn
     function showSection(sectionId) {
-        document.querySelectorAll('main > div').forEach(div => {
-            div.classList.add('hidden');
-        });
-        document.getElementById(sectionId).classList.remove('hidden');
+    // Ẩn tất cả các phần
+    document.querySelectorAll('main > div').forEach(div => {
+        div.classList.add('hidden');
+    });
+
+    // Hiện phần được chọn
+    const section = document.getElementById(sectionId);
+    if (section) {
+        section.classList.remove('hidden');
     }
+
+    // Nếu là phần "other" thì tự động kích hoạt "Tin học văn phòng"
+    if (sectionId === 'other') {
+        showCategory('office');
+    }
+}
 </script>
 <script>
     // Toggle sidebar với overlay
