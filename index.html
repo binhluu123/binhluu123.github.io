@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thư viện tài liệu</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+   <style>
+    /* CSS chung cho body */
+    body {
+        background-color: #f8fafc;
+         font-family: 'Roboto', sans-serif;
+    }
+
+    /* Ẩn các phần tử có class hidden */
+    .hidden { display: none; }
+
+    /* CSS riêng cho các môn học */
+    .mon-hoc {
+    position: relative; /* Cần thiết để lớp phủ hoạt động */
+    color: white; /* Màu chữ */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Hiệu ứng đổ bóng */
+    font-weight: bold;
+    transition: all 0.3s ease; /* Hiệu ứng chuyển động mượt mà */
+    background-size: cover; /* Đảm bảo hình nền phủ đầy */
+    background-position: center; /* Căn giữa hình nền */
+    overflow: hidden; /* Đảm bảo lớp phủ không vượt ra ngoài */
+}
+
+.mon-hoc::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3); /* Lớp phủ màu đen với độ mờ 30% */
+    z-index: 1; /* Lớp phủ nằm dưới chữ */
+}
+
+.mon-hoc h2 {
+    position: relative;
+    z-index: 2; /* Chữ nằm trên lớp phủ */
+}
+ .no-overlay::before {
+    display: none; /* Ẩn lớp phủ mờ */
+}
+    .mon-hoc:hover {
+        color: yellow; /* Màu chữ khi hover */
+        transform: scale(1.05); /* Phóng to nhẹ */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Đổ bóng */
+    }
+
+    .mon-hoc:active {
+        transform: scale(0.95); /* Thu nhỏ khi nhấn */
+    }
+
+    /* CSS cho sidebar */
+    .sidebar {
+        background-color: #f5f5dc; /* Màu trắng */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Hiệu ứng bóng đổ */
+        width: 20%;
+        height: 100vh;
+        padding: 20px;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Tiêu đề sidebar */
+    .sidebar h1 {
+        font-family: 'Times New Roman', serif;
+        font-size: 22px;
+        font-weight: bold;
+        text-align: center;
+        color: #1a237e; /* Xanh đậm */
+        margin-bottom: 20px;
+    }
+
+    /* Danh mục trong sidebar */
+    .sidebar ul li {
+        font-weight: bold;
+        padding: 12px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease; /* Hiệu ứng chuyển động mượt mà */
+    }
+
+    /* Hiệu ứng hover cho danh mục */
+    .sidebar ul li:hover {
+        background-color: #d5c4a1; /* Màu be đậm hơn */
+        color: #1a237e;
+        transform: scale(1.05); /* Phóng to nhẹ */
+    }
+
+    /* CSS cho header */
+    .header {
+        position: relative;
+        background-color: transparent; /* Làm trong suốt */
+        color: white;
+        padding: 15px 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Nền ảnh cho header */
+    .header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('Ảnh/galaxy.png') no-repeat center center;
+        background-size: cover;
+        opacity: 0.8; /* Độ trong suốt của nền */
+        z-index: -1;
+        border-radius: 10px; /* Bo tròn góc nếu cần */
+        padding: 10px;
+    }
+
+    /* CSS cho icon máy bay */
+    .airplane-icon {
+        width: 40px; /* Kích thước ảnh máy bay */
+        animation: fly 3s infinite alternate ease-in-out; /* Hiệu ứng bay */
+    }
+
+    /* Hiệu ứng máy bay bay lên xuống */
+    @keyframes fly {
+        0% { transform: translateY(0px); }
+        100% { transform: translateY(-10px); }
+    }
+
+    /* CSS cho thanh tìm kiếm */
+    #search-bar {
+        color: black; /* Để chữ không bị chìm nếu nền sáng */
+        cursor: text; /* Hiển thị con trỏ nhập liệu */
+        background-color: white; /* Đảm bảo nền trắng để chữ đen dễ đọc */
+        border: 1px solid #ccc; /* Thêm viền để dễ nhìn hơn */
+        padding: 8px;
+        border-radius: 5px;
+    }
+
+    /* Chỉnh sửa kích thước chữ logo */
+    .header h1 {
+        font-size: 20px; /* Tăng kích thước chữ */
+        font-weight: bold;
+        margin: 0;
+    }
+    .menu-button {
+        /* Ẩn trên desktop */
+        display:none;
+        color: black;
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.9);
+        border: none;
+        border-radius: 5px;
+        padding: 8px 12px;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+     /* Responsive design cho điện thoại */
+    @media (max-width: 768px) {
+        /* Header */
+        .menu-button {
+            display: block; /* Hiển thị trên mobile */
+        }
+        .header {
+            flex-direction: column; /* Xếp các phần tử theo chiều dọc */
+            text-align: center;
+            padding: 10px;
+        }
+
+        .header h1 {
+            font-size: 24px; /* Giảm kích thước chữ trên điện thoại */
+            margin-bottom: 10px;
+        }
+
+        .header img {
+            height: 30px; /* Giảm kích thước logo trên điện thoại */
+        }
+
+        /* Sidebar */
+       .sidebar {
+            position: fixed;
+            left: -100%;
+            width: 70% !important;
+            transition: 0.3s all ease;
+            height: 100vh;
+            z-index: 999;
+        }
+        
+        .sidebar.active {
+            left: 0;
+        }
+        
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 998;
+            display: none;
+        }
+        
+        .sidebar.active + .sidebar-overlay {
+            display: block;
+        }
+
+        .sidebar ul li {
+            padding: 10px; /* Giảm padding cho các mục */
+        }
+
+        /* Nội dung chính */
+        main {
+            width: 100%; /* Chiếm toàn bộ chiều rộng */
+            padding: 10px;
+        }
+
+        /* Các khóa học */
+        .mon-hoc {
+            width: 100%; /* Chiếm toàn bộ chiều rộng */
+            margin-bottom: 10px; /* Khoảng cách giữa các khóa học */
+        }
+
+        /* Video ôn thi */
+        iframe {
+            height: 200px; /* Giảm chiều cao video trên điện thoại */
+        }
+    }
+        .category-menu {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.category-btn {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background: #1a237e;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.category-btn:hover {
+    transform: scale(1.05);
+    background: #303f9f;
+}
+.category-btn.active {
+    transform: scale(1.1); /* Phóng to 110% */
+    background: #FFD700; /* Màu vàng */
+    color: #1a237e; /* Màu chữ xanh đậm */
+    transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease; /* Hiệu ứng mượt mà */
+}
+.course-category {
+    display: none;
+}
+
+.course-category.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+</style>
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="header">
+    <button class="menu-button" onclick="toggleSidebar()">☰</button>
+        <div class="flex items-center space-x-3">
+            <img src="F:\WEB học tập VAA\Ảnh\logo.png" alt="Logo" class="h-10">
+            <h1 class="text-xl font-bold text-white">VŨ TRỤ HỌC TẬP_VAA</h1>
+            <img src="F:\WEB học tập VAA\Ảnh\maybay.png" alt="Máy bay" class="airplane-icon">
+        </div>
+        <input type="text" id="search-bar" placeholder="🔍 Tìm kiếm lớp, tài liệu, video..." class="w-1/3 p-2 border rounded-lg shadow-sm">
+        <img src="F:\WEB học tập VAA\Ảnh\logotruongvaa.png" alt="Logo Trường" class="h-10">
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <ul class="space-y-4">
+                <li onclick="showSection('home')">🏠 Trang Chủ</li>
+                <li onclick="showSection('vaa')">📚 Tài Liệu Học Tập VAA</li>
+                <li onclick="showSection('other')">📖 Các Khóa Học Hay</li>
+                <li onclick="showSection('videos')">🎥 FeedBack</li>
+            </ul>
+        </nav>
+        <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+        <!-- Main Content -->
+        <main class="w-4/5 p-6">
+            <!-- Trang chủ -->
+            <div id="home">
+                <h2 class="text-2xl font-semibold mb-4">📺 Video ôn thi</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <iframe class="w-full h-60" src="https://www.youtube.com/embed/LLI7ynccjJU" frameborder="0" allowfullscreen></iframe>
+                    <iframe class="w-full h-60" src="https://www.youtube.com/embed/Oahag8GhAJ0?si=CLSk2mDtFVuJSRZx" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <h2 class="text-2xl font-semibold mt-6 mb-4">📖 Các khóa học</h2>
+                <p>Danh sách các khóa học sẽ được cập nhật tại đây.</p>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+                    <a href="xstk.html" class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" style="background-image: url('F:/WEB học tập VAA/Ảnh/XSTK.png'); background-size: contain; height: 200px; width: 300%;">
+    <h2>KHÓA HỌC XÁC SUẤT THỐNG KÊ</h2>
+</a>
+                </div>
+            </div>
+
+            <!-- Tài liệu học tập VAA -->
+            <div id="vaa" class="hidden">
+                <h2 class="text-2xl font-semibold mb-4">📚 Tài Liệu Học Tập VAA</h2>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <a href="https://drive.google.com/drive/folders/17AJDLzavALUYS0F0e3UG5j4pQ1nx6ZVC?usp=drive_link?usp=drive_link" class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc" style="background-image: url('F:/WEB học tập VAA/Ảnh/CSNCN.png'); height: 150px;">
+                       <h2>CƠ SỞ NGÀNH - CHUYÊN NGÀNH</h2>
+                    </a>
+                    <a href="https://drive.google.com/drive/folders/1nCmi2G2Q5p4zGInQnHZkyIaWtGn6zbcL?usp=drive_link?usp=drive_link" class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc" style="background-image: url('F:/WEB học tập VAA/Ảnh/LLCT.png'); height: 150px;">
+                        <h2>ĐẠI CƯƠNG - LÝ LUẬN CHÍNH TRỊ</h2>
+                    </a>
+                    <a href="https://drive.google.com/drive/folders/1nFz7-YdMi9xH1J3YWb0YqG6QqyfJtqvV?usp=drive_link?usp=drive_link" class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc" style="background-image: url('F:/WEB học tập VAA/Ảnh/HPTC.png'); height: 150px;">
+                        <h2>HỌC PHẦN TỰ CHỌN </h2>
+                    </a>
+                    <a href="https://drive.google.com/drive/folders/1nHlA3AxANdaqMlOO3xVRqInuPW85pMLM?usp=drive_link?usp=drive_link" class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc" style="background-image: url('F:/WEB học tập VAA/Ảnh/TOANNC.png'); height: 150px;">
+                        <h2>TÍNH TOÁN - TOÁN NÂNG CAO </h2>
+                    </a>
+                </div>
+                <p id="no-result" class="text-red-500 hidden">Không tìm thấy kết quả!</p>
+            </div>
+
+            <!-- Các Khóa Học Hay -->
+            <div id="other" class="hidden">
+    <h2 class="text-2xl font-semibold mb-4">📖 Các Khóa Học Hay</h2>
+    
+    <!-- Thêm menu danh mục -->
+    <div class="category-menu mb-6">
+        <button class="category-btn" onclick="showCategory('office')">🖥️ Tin học văn phòng</button>
+        <button class="category-btn" onclick="showCategory('programming')">💻 Lập trình</button>
+        <button class="category-btn" onclick="showCategory('language')">🌎 Ngoại ngữ</button>
+        <button class="category-btn" onclick="showCategory('technology')">🤖 Công nghệ</button>
+    </div>
+
+    <!-- Danh mục Tin học văn phòng -->
+    <div id="office" class="course-category active">
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <a href="https://drive.google.com/drive/folders/1l1IKaOT1BRuHBrpRiBQ-IgSlVfleHz_Y?usp=drive_link?usp=drive_link?usp=drive_link" 
+               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
+               style="background-image: url('F:/WEB học tập VAA/Ảnh/excel.png'); height: 150px;">
+                <h2>EXCEL PRO</h2>
+            </a>
+            <a href="https://drive.google.com/drive/folders/15-fOtCGM05vq_mW-uo_4ToB25gLSbYqt?usp=drive_link" 
+               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
+               style="background-image: url('F:/WEB học tập VAA/Ảnh/word.png'); height: 150px;">
+                <h2>WORD PRO</h2>
+            </a>
+            <a href="https://drive.google.com/drive/folders/1VLOg45rrkMoP1R_dqPVzeR69MaW_PcoL?usp=drive_link" 
+               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
+               style="background-image: url('F:/WEB học tập VAA/Ảnh/photoshop.png'); height: 150px;">
+                <h2>PHOTOSHOP THIẾT KẾ UX/UI</h2>
+            </a>
+        </div>
+    </div>
+
+    <!-- Danh mục Lập trình -->
+    <div id="programming" class="course-category">
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <a href="https://drive.google.com/drive/folders/1UEIYHCM1bb4hZVsqwtbdvTAimYtxmWL2?usp=drive_link" 
+               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
+               style="background-image: url('F:/WEB học tập VAA/Ảnh/python.png'); height: 150px;">
+                <h2>LẬP TRÌNH PYTHON</h2>
+            </a>
+            <a href="https://drive.google.com/drive/folders/1lwMJyDU-ca3KmzVGZi3bT1UUMDClBVC-?usp=drive_link" 
+               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
+               style="background-image: url('F:/WEB học tập VAA/Ảnh/ccong.png'); height: 150px;">
+                <h2>LẬP TRÌNH C++</h2>
+            </a>
+            <a href="https://drive.google.com/drive/folders/10Z4BDlsHYLAQ1JQXVA9gMLW4KMqU1t0z?usp=drive_link" 
+               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
+               style="background-image: url('F:/WEB học tập VAA/Ảnh/c.png'); height: 150px;">
+                <h2>LẬP TRÌNH C</h2>
+            </a>
+            <a href="https://drive.google.com/drive/folders/1xrscrhDX-jf9rT4iRN4ItzkeN6sYTfzi?usp=drive_link" 
+               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
+               style="background-image: url('F:/WEB học tập VAA/Ảnh/laravel.png'); height: 150px;">
+                <h2>LẬP TRÌNH LARAVEL</h2>
+            </a>
+            <a href="https://drive.google.com/drive/folders/18GbDdicVlluQH1BEQElvJpddv86VWIL1?usp=drive_link" 
+               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
+               style="background-image: url('F:/WEB học tập VAA/Ảnh/java.png'); height: 150px;">
+                <h2>JAVASCRIPT</h2>
+            </a>
+        </div>
+    </div>
+
+    <!-- Danh mục Ngoại ngữ -->
+    <div id="language" class="course-category">
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <a href="https://drive.google.com/drive/folders/1uZhRb-26y3-VtKJLonVcx_Xqo6WaQkoX?usp=drive_link" 
+               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
+               style="background-image: url('F:/WEB học tập VAA/Ảnh/toeic.png'); height: 150px;">
+                <h2>TOEIC</h2>
+            </a>
+            <a href="https://drive.google.com/drive/folders/1aOj_ypgg6xJnS0a7Vzit863esVn--DT0?usp=drive_link" 
+               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
+               style="background-image: url('F:/WEB học tập VAA/Ảnh/ielts.png'); height: 150px;">
+                <h2>IELTS (4 Kĩ Năng)</h2>
+            </a>
+        </div>
+    </div>
+
+    <!-- Danh mục Công nghệ -->
+    <div id="technology" class="course-category">
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <a href="https://drive.google.com/drive/folders/10u5M-6H3sQdKx-E4aURvbJ1C4l5MrmsJ?usp=drive_link" 
+               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
+               style="background-image: url('F:/WEB học tập VAA/Ảnh/machine.png'); height: 150px;">
+                <h2>MACHINE LEARNING</h2>
+            </a>
+            <a href="https://drive.google.com/drive/folders/1hxw1S2YdZDbKa-CZh90edC3dvdbyxL_u?usp=drive_link" 
+               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
+               style="background-image: url('F:/WEB học tập VAA/Ảnh/robotics.png'); height: 150px;">
+                <h2>ROBOTICS CĂN BẢN</h2>
+            </a>
+            <a href="https://drive.google.com/drive/folders/15-fOtCGM05vq_mW-uo_4ToB25gLSbYqt?usp=drive_link" 
+               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
+               style="background-image: url('F:/WEB học tập VAA/Ảnh/canhtay.png'); height: 150px;">
+                <h2>ĐIỀU KHIỂN CÁNH TAY ROBOT</h2>
+            </a>
+            <a href="https://drive.google.com/drive/folders/1Bj6OP16za8qkBIsR7caV9aGtTmmwWN9H?usp=drive_link" 
+               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
+               style="background-image: url('F:/WEB học tập VAA/Ảnh/linux.png'); height: 150px;">
+                <h2>HỆ ĐIỀU HÀNH LINUX</h2>
+            </a>
+            <a href="https://drive.google.com/drive/folders/1hUzpGyFa8UAbUNtPjNGiBXW3EzRlOEpr?usp=drive_link" 
+               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
+               style="background-image: url('F:/WEB học tập VAA/Ảnh/fullstack.png'); height: 150px;">
+                <h2>FULLSTACK MEVN</h2>
+            </a>
+            <a href="https://drive.google.com/drive/folders/11sWARAJS9pZx8rMdpTVskUy8sYchteGh?usp=drive_link" 
+               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
+               style="background-image: url('F:/WEB học tập VAA/Ảnh/frontend.png'); height: 150px;">
+                <h2>FRONTEND REACTJS</h2>
+            </a>
+        </div>
+    </div>
+
+    <p id="no-result" class="text-red-500 hidden">Không tìm thấy kết quả!</p>
+</div>
+
+            <!-- Feedback -->
+            <div id="videos" class="hidden">
+                <h2 class="text-2xl font-semibold mb-4">🎥 FeedBack</h2>
+                <iframe class="w-full h-40" src="https://youtu.be/Oahag8GhAJ0?si=_X2zuQTQQ31HI6KS"></iframe>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white text-center p-4 mt-6">
+        © 2025 Thư viện tài liệu | Designed by ChatGPT
+    </footer>
+
+    <script>
+        // Hiển thị phần được chọn và ẩn các phần khác
+        function showSection(sectionId) {
+            document.querySelectorAll('main > div').forEach(div => {
+                div.classList.add('hidden');
+            });
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+    </script>
+
+    <script>
+        // Xử lý tìm kiếm
+        document.getElementById("search-bar").addEventListener("input", function() {
+            let searchText = this.value.toLowerCase();
+            let items = document.querySelectorAll(".mon-hoc");
+            let found = false;
+
+            items.forEach(item => {
+                let text = item.innerText.toLowerCase();
+                if (text.includes(searchText)) {
+                    item.classList.remove("hidden");
+                    found = true;
+                } else {
+                    item.classList.add("hidden");
+                }
+            });
+
+            let noResult = document.getElementById("no-result");
+            if (!found) {
+                noResult.classList.remove("hidden");
+            } else {
+                noResult.classList.add("hidden");
+            }
+        });
+    </script>
+<!-- Thêm đoạn script này vào cuối file index.html -->
+<script>
+    // Kiểm tra URL parameter hoặc session storage khi trang được tải
+    document.addEventListener("DOMContentLoaded", function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const sectionToShow = urlParams.get('section');
+
+        if (sectionToShow) {
+            showSection(sectionToShow);
+        } else {
+            showSection('home'); // Mặc định hiển thị trang chủ
+        }
+    });
+
+    // Hàm hiển thị phần được chọn
+    function showSection(sectionId) {
+        document.querySelectorAll('main > div').forEach(div => {
+            div.classList.add('hidden');
+        });
+        document.getElementById(sectionId).classList.remove('hidden');
+    }
+</script>
+<script>
+    // Toggle sidebar với overlay
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.querySelector('.sidebar-overlay');
+        sidebar.classList.toggle('active');
+        overlay.style.display = sidebar.classList.contains('active') ? 'block' : 'none';
+    }
+
+    // Tự động ẩn sidebar khi resize
+    window.addEventListener('resize', function() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.querySelector('.sidebar-overlay');
+        
+        if (window.innerWidth > 768) {
+            sidebar.classList.remove('active');
+            sidebar.style.left = '';
+            overlay.style.display = 'none';
+        }
+    });
+
+    // Khởi tạo sidebar khi tải trang
+    window.addEventListener('load', function() {
+        if (window.innerWidth <= 768) {
+            document.getElementById('sidebar').classList.remove('active');
+        }
+    });
+function showCategory(category) {
+    // Ẩn tất cả các danh mục khóa học
+    document.querySelectorAll('.course-category').forEach(div => {
+        div.classList.remove('active');
+    });
+    // Hiển thị danh mục được chọn
+    document.getElementById(category).classList.add('active');
+
+    // Xóa class active khỏi tất cả các nút danh mục
+    document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    // Thêm class active cho nút được chọn
+    document.querySelector(`.category-btn[onclick="showCategory('${category}')"]`).classList.add('active');
+}
+</script>
+</body>
+</html>

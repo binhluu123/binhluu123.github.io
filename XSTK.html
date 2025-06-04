@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khóa Học Xác Suất Thống Kê</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* CSS cho nút quay lại */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            background-color: #1a73e8; /* Màu xanh dương */
+            color: white;
+            font-weight: bold;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background-color: #1557b0; /* Màu xanh dương đậm hơn khi hover */
+            transform: translateY(-2px); /* Hiệu ứng nổi lên */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+        }
+
+        .back-button:active {
+            transform: translateY(0); /* Hiệu ứng nhấn xuống */
+            box-shadow: none;
+        }
+
+        .back-button svg {
+            margin-right: 8px;
+            width: 20px;
+            height: 20px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Header -->
+    <header class="bg-blue-900 text-white p-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold">Khóa Học Xác Suất Thống Kê</h1>
+        <a href="index3.html?section=home" class="back-button">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Quay lại
+        </a>
+    </header>
+
+    <main class="p-6">
+        <h2 class="text-2xl font-bold mb-4">Thông tin khóa học</h2>
+        <p><strong>Người hướng dẫn:</strong> Lưu Nguyễn Thanh Bình, sinh viên ngành khoa học và kĩ thuật máy tính của trường Đại học Bách Khoa TP.HCM </p>
+        <p><strong>Đối tượng:</strong> Sinh viên của Học Viện Hàng Không và các trường liên quan</p>
+        <p><strong>Số lượng học viên:</strong> 500+ học viên</p>
+        <p><strong>Hình thức học:</strong> Lý thuyết + bài tập + livestream</p>
+
+        <h2 class="text-xl font-bold mt-6">Ưu đãi đặc biệt</h2>
+        <ul class="list-disc pl-5">
+            <li>tặng các tài liệu của các môn khác</li>
+            <li>Tặng các bài tự soạn, tổng hợp lời giảng của giảng viên một số slide ppt</li>
+            <li>Truy cập tài liệu PDF (~400 trang)</li>
+        </ul>
+
+        <h2 class="text-xl font-bold mt-6">Lịch học dự kiến</h2>
+        <div class="bg-white p-4 shadow rounded-lg mt-4">
+            <p>📅 Lịch học giữa kỳ: <strong>15/03/2025</strong></p>
+            <p>📅 Lịch học cuối kỳ: <strong>10/06/2025</strong></p>
+        </div>
+
+        <button id="openModal" class="mt-6 px-4 py-2 bg-green-600 text-white font-bold rounded-lg shadow">
+            Đăng ký ngay
+        </button>
+    </main>
+
+    <div id="registerModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-96 text-center">
+            <h2 class="text-xl font-bold mb-4">Đăng ký khóa học</h2>
+            <p>Nhấn vào đường link bên dưới để đăng ký:</p>
+            <a href="https://www.facebook.com/YOUR_PROFILE" 
+               class="text-blue-600 font-bold underline block mt-2" 
+               target="_blank">Facebook của tôi</a>
+            <button id="closeModal" class="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg">Đóng</button>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById("registerModal");
+        const openBtn = document.getElementById("openModal");
+        const closeBtn = document.getElementById("closeModal");
+
+        openBtn.addEventListener("click", () => {
+            modal.classList.remove("hidden");
+        });
+
+        closeBtn.addEventListener("click", () => {
+            modal.classList.add("hidden");
+        });
+
+        // Đóng modal khi nhấn ra ngoài
+        modal.addEventListener("click", (event) => {
+            if (event.target === modal) {
+                modal.classList.add("hidden");
+            }
+        });
+    </script>
+
+</body>
+</html>
