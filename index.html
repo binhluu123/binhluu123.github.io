@@ -1,584 +1,1301 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thư viện tài liệu</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-   <style>
-    /* CSS chung cho body */
-    body {
-        background-color: #f8fafc;
-         font-family: 'Roboto', sans-serif;
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Vũ Trụ Học Tập • VAA (Pro)</title>
+<meta name="description" content="Hệ thống khoá học & tài liệu học tập VAA - phiên bản chuyên nghiệp" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&family=Playfair+Display:wght@800&display=swap" rel="stylesheet">
 
-    /* Ẩn các phần tử có class hidden */
-    .hidden { display: none; }
+<style>
+/* ========================================================================== */
+/*  VŨ TRỤ HỌC TẬP • VAA — PRO SINGLE FILE                                    */
+/*  - Design tokens                                                           */
+/*  - Base resets & typography                                                */
+/*  - Layout system (container, grid)                                         */
+/*  - Components: Header/Nav/Search, Hero Slider, Cards, Tabs, Modal, Toast   */
+/*  - Utilities: spacing, flex, grid, radius, shadow, visibility              */
+/*  - Animations & motion-reduction                                           */
+/*  - Accessibility helpers                                                   */
+/*  - Print styles                                                            */
+/* ========================================================================== */
 
-    /* CSS riêng cho các môn học */
-    .mon-hoc {
-    position: relative; /* Cần thiết để lớp phủ hoạt động */
-    color: white; /* Màu chữ */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Hiệu ứng đổ bóng */
-    font-weight: bold;
-    transition: all 0.3s ease; /* Hiệu ứng chuyển động mượt mà */
-    background-size: cover; /* Đảm bảo hình nền phủ đầy */
-    background-position: center; /* Căn giữa hình nền */
-    overflow: hidden; /* Đảm bảo lớp phủ không vượt ra ngoài */
+
+/* -------------------------------------------------------------------------- */
+/* 1) TOKENS                                                                  */
+/* -------------------------------------------------------------------------- */
+:root{
+  /* brand palette - giữ nguyên ý tưởng/màu gốc */
+  --primary:#162673;           /* xanh đậm, nav text/nhấn mạnh */
+  --primary-2:#2b3fd6;         /* xanh sáng, điểm nhấn */
+  --accent:#ff9800;            /* cam (ribbon, giá) */
+  --ink:#111827;               /* text chính */
+  --muted:#667085;             /* text phụ */
+  --bg:#f7f8fb;                /* nền */
+  --white:#fff;                /* trắng */
+  --success:#10b981;           /* xanh chat */
+  --info:#0ea5e9;              /* xanh call */
+  --danger:#ef4444;            /* đỏ cảnh báo */
+
+  /* layout */
+  --radius:14px;
+  --radius-lg:22px;
+  --radius-sm:10px;
+  --shadow:0 10px 24px rgba(16,24,40,.08);
+  --shadow-lg:0 18px 40px rgba(9,14,40,.16);
+  --container:1200px;
+
+  /* typography */
+  --font-ui:"Be Vietnam Pro",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  --font-display:"Playfair Display",serif;
+  --fz-12:12px;
+  --fz-14:14px;
+  --fz-16:16px;
+  --fz-18:18px;
+  --fz-22:22px;
+  --fz-28:28px;
+  --fz-38:38px;
+
+  /* motion */
+  --dur-1:120ms;
+  --dur-2:240ms;
+  --dur-3:480ms;
+  --e-out:cubic-bezier(.2,.8,.2,1);
+   /* header size used to offset main content */
+
+  --header-height:88px;
+
+
+
+  /* buttons */
+
+  --btn-radius:12px;
+
+  --btn-elev:0 8px 20px rgba(43,63,214,0.12);
 }
 
-.mon-hoc::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.3); /* Lớp phủ màu đen với độ mờ 30% */
-    z-index: 1; /* Lớp phủ nằm dưới chữ */
+/* -------------------------------------------------------------------------- */
+/* 2) BASE RESET + TYPOGRAPHY                                                 */
+/* -------------------------------------------------------------------------- */
+*{box-sizing:border-box}
+html,body{height:100%}
+html:focus-within{scroll-behavior:smooth}
+body{
+  margin:0; color:var(--ink); background:var(--bg);
+  font:var(--fz-16)/1.6 var(--font-ui);
+  text-rendering:optimizeLegibility; -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%; display:block}
+svg{shape-rendering:geometricPrecision}
+a{color:inherit}
+button,input,select,textarea{font:inherit}
+:focus-visible{outline:3px solid rgba(43,63,214,.45); outline-offset:2px}
+
+/* -------------------------------------------------------------------------- */
+/* 3) LAYOUT                                                                  */
+/* -------------------------------------------------------------------------- */
+.container{max-width:var(--container); margin:auto; padding:24px}
+.section{scroll-margin-top:90px}
+.section__title{font:800 var(--fz-38)/1.2 var(--font-display); letter-spacing:.5px; margin:6px 0 10px}
+.lead{color:var(--muted); max-width:900px}
+
+/* grid helpers */
+.grid{display:grid; gap:30px}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+@media (max-width:1024px){.grid-3{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:720px){.grid-2,.grid-3{grid-template-columns:1fr}}
+
+/* -------------------------------------------------------------------------- */
+/* 4) HEADER / NAV / SEARCH                                                   */
+/* -------------------------------------------------------------------------- */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: linear-gradient(90deg,#2f2a7b 0%, #11133e 50%, #3a36cf 100%);
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,.12);
+}
+body {
+  padding-top: var(--header-height);
+}
+.header__bar{
+  max-width:var(--container); margin:auto; display:flex; align-items:center; gap:20px; padding:14px 20px;
+}
+.brand{display:flex; align-items:center; gap:14px; text-decoration:none}
+.brand__logo{
+  width:56px;height:56px;border-radius:50%;background:#0c1140; display:grid; place-items:center;
+  border:2px solid rgba(255,255,255,.25); box-shadow:inset 0 0 0 2px rgba(12,17,64,.35)
+}
+.brand__logo svg{width:40px;height:40px;fill:#fff}
+.brand__text{display:flex;flex-direction:column}
+.brand__title{font-weight:800;letter-spacing:.5px}
+.brand__subtitle{color:#ffb74d;font-weight:800}
+
+.nav{margin-left:auto; display:flex; align-items:center; gap:28px; flex-wrap:wrap}
+.nav a{
+  color:#fff; text-decoration:none; font-weight:700; letter-spacing:.3px;
+  position:relative; padding:8px 2px; transition:color var(--dur-2) var(--e-out)
+}
+.nav a:after{
+  content:""; position:absolute; inset:auto 0 -6px 0; height:3px; border-radius:2px;
+  background:transparent; transition:transform var(--dur-2) var(--e-out), background var(--dur-2);
+  transform:scaleX(0); transform-origin:left;
+}
+.nav a:hover{color:#ffedd5}
+.nav a:hover:after, .nav a.is-active:after{ background:var(--accent); transform:scaleX(1)}
+
+/* Search box */
+.search{position:relative}
+.search input{
+  width:220px; padding:8px 36px 8px 12px; border-radius:10px; border:none; background:#fff;
+  color:#111; box-shadow:0 2px 0 rgba(0,0,0,.04) inset; transition:box-shadow var(--dur-2) var(--e-out)
+}
+.search input::placeholder{color:#9aa3b2}
+.search input:focus{box-shadow:0 0 0 3px rgba(43,63,214,.2)}
+.search svg{
+  position:absolute; right:10px; top:50%; transform:translateY(-50%); width:18px; height:18px; fill:#555
 }
 
-.mon-hoc h2 {
-    position: relative;
-    z-index: 2; /* Chữ nằm trên lớp phủ */
+/* mobile nav */
+.nav-toggle{
+  display:none; margin-left:auto; background:#fff; border:0; border-radius:10px; padding:8px 10px; color:#111;
+  box-shadow:var(--shadow); font-weight:700
 }
- .no-overlay::before {
-    display: none; /* Ẩn lớp phủ mờ */
-}
-    .mon-hoc:hover {
-        color: yellow; /* Màu chữ khi hover */
-        transform: scale(1.05); /* Phóng to nhẹ */
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Đổ bóng */
-    }
-
-    .mon-hoc:active {
-        transform: scale(0.95); /* Thu nhỏ khi nhấn */
-    }
-
-    /* CSS cho sidebar */
-    .sidebar {
-        background-color: #f5f5dc; /* Màu trắng */
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Hiệu ứng bóng đổ */
-        width: 20%;
-        height: 100vh;
-        padding: 20px;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Tiêu đề sidebar */
-    .sidebar h1 {
-        font-family: 'Times New Roman', serif;
-        font-size: 22px;
-        font-weight: bold;
-        text-align: center;
-        color: #1a237e; /* Xanh đậm */
-        margin-bottom: 20px;
-    }
-
-    /* Danh mục trong sidebar */
-    .sidebar ul li {
-        font-weight: bold;
-        padding: 12px;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: all 0.3s ease; /* Hiệu ứng chuyển động mượt mà */
-    }
-
-    /* Hiệu ứng hover cho danh mục */
-    .sidebar ul li:hover {
-        background-color: #d5c4a1; /* Màu be đậm hơn */
-        color: #1a237e;
-        transform: scale(1.05); /* Phóng to nhẹ */
-    }
-
-    /* CSS cho header */
-    .header {
-        position: relative;
-        background-color: transparent; /* Làm trong suốt */
-        color: white;
-        padding: 15px 30px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
-    }
-
-    /* Nền ảnh cho header */
-    .header::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: url('Ảnh/galaxy.png') no-repeat center center;
-        background-size: cover;
-        opacity: 0.8; /* Độ trong suốt của nền */
-        z-index: -1;
-        border-radius: 10px; /* Bo tròn góc nếu cần */
-        padding: 10px;
-    }
-
-    /* CSS cho icon máy bay */
-    .airplane-icon {
-        width: 40px; /* Kích thước ảnh máy bay */
-        animation: fly 3s infinite alternate ease-in-out; /* Hiệu ứng bay */
-    }
-
-    /* Hiệu ứng máy bay bay lên xuống */
-    @keyframes fly {
-        0% { transform: translateY(0px); }
-        100% { transform: translateY(-10px); }
-    }
-
-    /* CSS cho thanh tìm kiếm */
-    #search-bar {
-        color: black; /* Để chữ không bị chìm nếu nền sáng */
-        cursor: text; /* Hiển thị con trỏ nhập liệu */
-        background-color: white; /* Đảm bảo nền trắng để chữ đen dễ đọc */
-        border: 1px solid #ccc; /* Thêm viền để dễ nhìn hơn */
-        padding: 8px;
-        border-radius: 5px;
-    }
-
-    /* Chỉnh sửa kích thước chữ logo */
-    .header h1 {
-        font-size: 20px; /* Tăng kích thước chữ */
-        font-weight: bold;
-        margin: 0;
-    }
-    .menu-button {
-        /* Ẩn trên desktop */
-        display:none;
-        color: black;
-        position: fixed;
-        top: 15px;
-        left: 15px;
-        z-index: 1000;
-        background: rgba(255, 255, 255, 0.9);
-        border: none;
-        border-radius: 5px;
-        padding: 8px 12px;
-        cursor: pointer;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
-     /* Responsive design cho điện thoại */
-    @media (max-width: 768px) {
-        /* Header */
-        .menu-button {
-            display: block; /* Hiển thị trên mobile */
-        }
-        .header {
-            flex-direction: column; /* Xếp các phần tử theo chiều dọc */
-            text-align: center;
-            padding: 10px;
-        }
-
-        .header h1 {
-            font-size: 24px; /* Giảm kích thước chữ trên điện thoại */
-            margin-bottom: 10px;
-        }
-
-        .header img {
-            height: 30px; /* Giảm kích thước logo trên điện thoại */
-        }
-
-        /* Sidebar */
-       .sidebar {
-            position: fixed;
-            left: -100%;
-            width: 70% !important;
-            transition: 0.3s all ease;
-            height: 100vh;
-            z-index: 999;
-        }
-        
-        .sidebar.active {
-            left: 0;
-        }
-        
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 998;
-            display: none;
-        }
-        
-        .sidebar.active + .sidebar-overlay {
-            display: block;
-        }
-
-        .sidebar ul li {
-            padding: 10px; /* Giảm padding cho các mục */
-        }
-
-        /* Nội dung chính */
-        main {
-            width: 100%; /* Chiếm toàn bộ chiều rộng */
-            padding: 10px;
-        }
-
-        /* Các khóa học */
-        .mon-hoc {
-            width: 100%; /* Chiếm toàn bộ chiều rộng */
-            margin-bottom: 10px; /* Khoảng cách giữa các khóa học */
-        }
-
-        /* Video ôn thi */
-        iframe {
-            height: 200px; /* Giảm chiều cao video trên điện thoại */
-        }
-    }
-        .category-menu {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
+@media (max-width:820px){
+  .nav{display:none; position:fixed; inset:62px 0 auto 0; background:#11133e; padding:16px 20px; box-shadow:var(--shadow)}
+  .nav.is-open{display:flex; flex-direction:column; gap:10px}
+  .nav-toggle{display:inline-block}
+  .search{display:none}
 }
 
-.category-btn {
-    padding: 10px 20px;
-    cursor: pointer;
-    border: none;
-    border-radius: 8px;
-    background: #1a237e;
-    color: white;
-    transition: all 0.3s ease;
+/* -------------------------------------------------------------------------- */
+/* 5) HERO (SLIDER)                                                           */
+/* -------------------------------------------------------------------------- */
+.hero{
+  border-radius:var(--radius); background:linear-gradient(180deg,#edf2ff 0%, #cfd8ff 100%);
+  overflow:hidden; position:relative; padding:28px 24px 38px; box-shadow:var(--shadow)
+}
+.hero__row{ display:grid; grid-template-columns:auto 1fr; gap:24px; align-items:center }
+.hero__book svg{ width:130px;height:130px }
+@media (max-width:720px){ .hero__row{grid-template-columns:1fr} .hero__book{order:2} }
+
+/* slider core */
+.hero__slide{display:none; opacity:0; transition:opacity 1s var(--e-out)}
+.hero__slide.is-active{display:block; opacity:1}
+
+/* dots */
+.hero__dots{ display:flex; gap:14px; justify-content:center; margin-top:14px }
+.dot{ width:14px;height:14px; border-radius:50%; background:#c1c9ff; cursor:pointer; border:0; transition:transform var(--dur-1) var(--e-out) }
+.dot:focus-visible{outline-offset:3px}
+.dot:hover{ transform:scale(1.15) }
+.dot.is-active{ background:var(--primary-2) }
+
+/* slider arrows (a11y, keyboard) */
+.hero__arrows{ position:absolute; inset:0; display:flex; align-items:center; justify-content:space-between; pointer-events:none }
+.hero__arrow{
+  pointer-events:auto; background:rgba(17,19,62,.35); border:0; color:#fff; width:42px;height:42px; border-radius:50%;
+  display:grid;place-items:center; margin:0 10px; backdrop-filter:blur(6px); transition:background var(--dur-2)
+}
+.hero__arrow:hover{ background:rgba(17,19,62,.55) }
+
+/* live region for announcements */
+.visually-hidden{
+  position:absolute !important; height:1px; width:1px; overflow:hidden; clip:rect(1px,1px,1px,1px); white-space:nowrap
 }
 
-.category-btn:hover {
-    transform: scale(1.05);
-    background: #303f9f;
+/* -------------------------------------------------------------------------- */
+/* 6) INTRO BOX                                                               */
+/* -------------------------------------------------------------------------- */
+.badge-tab{
+  display:inline-block; background:#fff; padding:10px 24px; border-radius:12px;
+  position:relative; top:14px; font-weight:800; box-shadow:var(--shadow)
 }
-.category-btn.active {
-    transform: scale(1.1); /* Phóng to 110% */
-    background: #FFD700; /* Màu vàng */
-    color: #1a237e; /* Màu chữ xanh đậm */
-    transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease; /* Hiệu ứng mượt mà */
+.box{
+  background:linear-gradient(180deg,#e6eef9 0%, #c7d9ef 100%);
+  border-radius:12px; padding:30px; box-shadow:var(--shadow); position:relative
 }
-.course-category {
-    display: none;
+.box:before, .box:after{
+  content:""; position:absolute; inset:16px; border:6px solid #0b0b0b; border-radius:10px; pointer-events:none
+}
+.box:after{ inset:22px; border-color:#0b0b0b; opacity:.25 }
+
+/* -------------------------------------------------------------------------- */
+/* 7) CARDS / COURSES / LIBRARY                                               */
+/* -------------------------------------------------------------------------- */
+.card{
+  background:#fff; border-radius:var(--radius-lg); position:relative; padding:26px 22px 70px;
+  box-shadow:var(--shadow); overflow:hidden; transition: transform var(--dur-2) var(--e-out), box-shadow var(--dur-2) var(--e-out)
+}
+.card:hover{ transform: translateY(-8px) scale(1.02); box-shadow:var(--shadow-lg) }
+.card__frame{
+  border:3px dashed #111; border-radius:16px; height:320px; background:
+  linear-gradient(to right,transparent 24px,#2c8edb 24px, #2c8edb 34px, transparent 34px) top left/100% 12px no-repeat,
+  linear-gradient(to bottom,transparent 24px,#2c8edb 24px, #2c8edb 34px, transparent 34px) top left/12px 100% no-repeat
+}
+.card__ribbon{
+  position:absolute; left:24px; bottom:18px; color:#fff; font-weight:800;
+  background:#3e6aa0; padding:14px 22px; border-radius:8px;
+  clip-path:polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%, 8% 50%);
+  box-shadow:0 6px 0 #203b5e inset; transition: transform var(--dur-2), background var(--dur-2)
+}
+.card__ribbon:hover{ background:var(--accent); transform:scale(1.08) }
+.card__price{
+  position:absolute; top:-10px; left:26px; color:#fff; font-weight:900; letter-spacing:.5px;
+  transform:rotate(-6deg)
+}
+.tag{
+  --w:220px; --h:64px; width:var(--w); height:var(--h); display:grid; place-items:center;
+  background:linear-gradient(180deg,#ffb74d,#ff9800);
+  clip-path:polygon(6% 16%, 100% 0, 92% 100%, 0 84%); filter:drop-shadow(0 8px 8px rgba(0,0,0,.18))
+}
+.tag:after{
+  content:""; position:absolute; left:22px; top:64px; width:22px; height:22px;
+  background:#ffd27b; transform:skewX(-16deg) rotate(10deg)
 }
 
-.course-category.active {
-    display: block;
-    animation: fadeIn 0.3s ease;
+/* meta */
+.card__meta{display:flex; gap:10px; align-items:center; margin:12px 0 0}
+.badge{font-size:12px; background:#eef2ff; color:#1e3a8a; padding:6px 10px; border-radius:999px; font-weight:700}
+/* 7) BUTTONS + TABS (NÂNG CAO HIỆU ỨNG)                                      */
+
+/* -------------------------------------------------------------------------- */
+
+.btn{
+
+  display:inline-flex; align-items:center; gap:8px; justify-content:center;
+
+  background:#fff; border:0; border-radius:var(--btn-radius); padding:10px 14px; font-weight:800;
+
+  cursor:pointer; transition:transform .16s var(--e-out), box-shadow .16s var(--e-out), opacity .12s;
+
+  box-shadow:0 8px 20px rgba(12,17,64,.06);
+
+  position:relative; overflow:hidden;
+
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+.btn:active{ transform:translateY(1px) scale(.998) }
+
+.btn:disabled{ opacity:.6; cursor:not-allowed; transform:none }
+
+.btn--primary{
+
+  background:linear-gradient(90deg,var(--primary),var(--primary-2));
+
+  color:var(--white); box-shadow:var(--btn-elev); padding:11px 16px;
+
 }
+
+.btn--ghost{ background:transparent; border:2px solid rgba(12,17,64,.06) }
+
+
+
+.tab{
+
+  padding:8px 14px; border-radius:999px; border:2px solid #c7d2fe; color:#1e3a8a; font-weight:700; cursor:pointer;
+
+  background:#eef2ff; transition: transform .14s var(--e-out), box-shadow .14s var(--e-out);
+
+  position:relative; overflow:hidden;
+
+}
+
+.tab:hover{ transform:translateY(-4px); box-shadow:0 10px 26px rgba(11,97,164,.08) }
+
+.tab[aria-selected="true"], .tab.active{ background:#dbeafe; border-color:#93c5fd; transform:translateY(-6px); box-shadow:0 16px 34px rgba(11,97,164,.12) }
+
+
+
+/* focus helpers */
+
+.tab:focus-visible, .btn:focus-visible, .nav a:focus-visible { outline:3px solid rgba(43,63,214,.22); outline-offset:4px }
+
+
+
+/* ripple element */
+
+.ripple{
+
+  position:absolute; border-radius:50%; transform:scale(0); opacity:.6;
+
+  animation:ripple .56s cubic-bezier(.2,.8,.2,1);
+
+  pointer-events:none;
+
+  background:rgba(255,255,255,.45);
+
+}
+
+@keyframes ripple{ to{ transform:scale(6); opacity:0 } }
+
+
+
+/* -------------------------------------------------------------------------- */
+
+/* 8) FEED + OTHERS                                                            */
+/* -------------------------------------------------------------------------- */
+/* 8) FEED                                                                    */
+/* -------------------------------------------------------------------------- */
+.feed{display:grid; grid-template-columns:repeat(3,1fr); gap:20px}
+@media (max-width:900px){ .feed{ grid-template-columns:repeat(2,1fr)} }
+@media (max-width:560px){ .feed{ grid-template-columns:1fr} }
+.feed img{
+  width:100%; height:180px; object-fit:cover; border-radius:12px; box-shadow:var(--shadow);
+  transition: transform .4s var(--e-out), box-shadow .4s var(--e-out)
+}
+.feed img:hover{ transform:scale(1.05); box-shadow:0 12px 28px rgba(0,0,0,.2) }
+
+/* -------------------------------------------------------------------------- */
+/* 9) FLOATING CONTACT                                                        */
+/* -------------------------------------------------------------------------- */
+.fab{ position:fixed; right:22px; bottom:22px; display:flex; flex-direction:column; gap:14px; z-index:1001 }
+.fab a{
+  width:60px;height:60px; display:grid; place-items:center; border-radius:50%;
+  background:var(--info); color:#fff; text-decoration:none; box-shadow:var(--shadow)
+}
+.fab a.chat{ background:var(--success) }
+@keyframes ring{0%,100%{transform:rotate(0);}10%,30%,50%,70%,90%{transform:rotate(-10deg);}20%,40%,60%,80%{transform:rotate(10deg);}}
+.fab .call{ animation:ring 2s infinite }
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.7);}70%{box-shadow:0 0 0 16px rgba(16,185,129,0);}100%{box-shadow:0 0 0 0 rgba(16,185,129,0);}}
+.fab .chat{ animation:pulse 2s infinite }
+
+/* tooltip for fab */
+.tooltip{
+  position:absolute; right:70px; white-space:nowrap; background:#11133e; color:#fff; padding:8px 10px; border-radius:8px; box-shadow:var(--shadow);
+  transform:translateY(-50%); top:50%; opacity:0; pointer-events:none; transition:opacity var(--dur-2)
+}
+.fab a:hover .tooltip{opacity:1}
+
+/* -------------------------------------------------------------------------- */
+/* 10) FOOTER                                                                 */
+/* -------------------------------------------------------------------------- */
+.footer{text-align:center; color:#94a3b8; padding:30px 12px 50px}
+
+/* -------------------------------------------------------------------------- */
+/* 11) REVEAL ON SCROLL                                                       */
+/* -------------------------------------------------------------------------- */
+.reveal{opacity:0; transform:translateY(40px); transition:opacity .9s var(--e-out), transform .9s var(--e-out)}
+.reveal.active{opacity:1; transform:translateY(0)}
+
+/* -------------------------------------------------------------------------- */
+/* 12) TABS (CHO MỤC TÀI LIỆU)                                               */
+/* -------------------------------------------------------------------------- */
+.tabs{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+.tab{padding:8px 14px; border-radius:999px; border:2px solid #c7d2fe; background:#eef2ff; color:#1e3a8a; font-weight:700; cursor:pointer}
+.tab[aria-selected="true"]{background:#dbeafe; border-color:#93c5fd}
+
+/* -------------------------------------------------------------------------- */
+/* 13) MODAL                                                                  */
+/* -------------------------------------------------------------------------- */
+.modal-backdrop{
+  position:fixed; inset:0; background:rgba(2,6,23,.6); display:none; place-items:center; z-index:1200
+}
+.modal-backdrop.is-open{display:grid}
+.modal{
+  width:min(560px, calc(100vw - 32px)); background:#fff; border-radius:16px; box-shadow:var(--shadow-lg); overflow:hidden
+}
+.modal__head{display:flex; align-items:center; justify-content:space-between; padding:16px 18px; background:#11133e; color:#fff}
+.modal__title{font-weight:800}
+.modal__close{background:transparent; border:0; color:#fff; font-size:22px; line-height:1; cursor:pointer}
+.modal__body{padding:18px}
+.modal__row{display:grid; gap:12px}
+.input{display:flex; flex-direction:column; gap:6px}
+.input input, .input textarea{border:1px solid #e5e7eb; border-radius:10px; padding:10px 12px}
+.modal__actions{display:flex; gap:12px; justify-content:flex-end; padding:16px 18px; background:#f8fafc}
+.btn{border:0; border-radius:10px; padding:10px 14px; font-weight:700; cursor:pointer}
+.btn--primary{background:linear-gradient(90deg,#2f2a7b,#3a36cf); color:#fff}
+.btn--ghost{background:#fff; border:2px solid #e5e7eb}
+
+/* -------------------------------------------------------------------------- */
+/* 14) TOAST                                                                  */
+/* -------------------------------------------------------------------------- */
+.toast-wrap{position:fixed; right:20px; bottom:20px; display:grid; gap:10px; z-index:1300}
+.toast{
+  display:flex; gap:10px; align-items:flex-start; background:#0b122b; color:#fff; padding:12px 14px; border-radius:12px;
+  box-shadow:var(--shadow); transform:translateX(20px); opacity:0; animation:toast-in .32s var(--e-out) forwards
+}
+.toast--success{background:#065f46}
+.toast--info{background:#0c4a6e}
+.toast--danger{background:#7f1d1d}
+.toast__close{margin-left:8px; background:transparent; border:0; color:#fff; font-weight:900; cursor:pointer}
+@keyframes toast-in{to{transform:translateX(0); opacity:1}}
+
+/* -------------------------------------------------------------------------- */
+/* 15) SKELETON / LOADING                                                     */
+/* -------------------------------------------------------------------------- */
+.skeleton{ position:relative; overflow:hidden; background:#e5e7eb; border-radius:10px }
+.skeleton::after{
+  content:""; position:absolute; inset:0; transform:translateX(-100%);
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent);
+  animation:sk 1.2s infinite
+}
+@keyframes sk{ to{ transform:translateX(100%) } }
+
+/* -------------------------------------------------------------------------- */
+/* 16) ACCESSIBILITY HELPERS                                                  */
+/* -------------------------------------------------------------------------- */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+
+/* -------------------------------------------------------------------------- */
+/* 17) UTILITIES (đủ dày để mở rộng, có sử dụng rải rác)                      */
+/* -------------------------------------------------------------------------- */
+/* spacing */
+.mt-8{margin-top:8px} .mt-12{margin-top:12px} .mt-16{margin-top:16px}
+.mt-20{margin-top:20px} .mt-24{margin-top:24px} .mt-32{margin-top:32px}
+.mt-40{margin-top:40px} .mt-60{margin-top:60px}
+.mb-8{margin-bottom:8px} .mb-12{margin-bottom:12px} .mb-20{margin-bottom:20px} .mb-32{margin-bottom:32px}
+.pt-12{padding-top:12px} .pt-20{padding-top:20px} .pt-32{padding-top:32px}
+.pb-12{padding-bottom:12px} .pb-20{padding-bottom:20px} .pb-32{padding-bottom:32px}
+.p-12{padding:12px} .p-16{padding:16px} .p-20{padding:20px} .p-24{padding:24px}
+
+/* flex */
+.flex{display:flex} .items-center{align-items:center} .justify-between{justify-content:space-between}
+.gap-8{gap:8px} .gap-12{gap:12px} .gap-16{gap:16px} .gap-20{gap:20px} .gap-24{gap:24px}
+
+/* text */
+.center{text-align:center} .right{text-align:right} .bold{font-weight:800}
+.small{font-size:var(--fz-14)} .large{font-size:var(--fz-22)}
+
+/* radius/shadow */
+.round{border-radius:var(--radius)} .round-lg{border-radius:var(--radius-lg)} .round-sm{border-radius:var(--radius-sm)}
+.shadow{box-shadow:var(--shadow)} .shadow-lg{box-shadow:var(--shadow-lg)}
+
+/* hide */
+.hidden{display:none !important}
+
+/* -------------------------------------------------------------------------- */
+/* 18) PRINT                                                                  */
+/* -------------------------------------------------------------------------- */
+@media print{
+  .header,.fab,.toast-wrap,.hero__arrows{display:none !important}
+  .container{max-width:100%; padding:0}
+  body{background:#fff}
+}
+
+/* -------------------------------------------------------------------------- */
+/* 19) REDUCE MOTION                                                          */
+/* -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important}
+}
+
+/* -------------------------------------------------------------------------- */
+/* 20) ACHIEVEMENTS BOX                                                       */
+/* -------------------------------------------------------------------------- */
+.achv{position:relative; background:#fff; border-radius:22px; padding:30px; box-shadow:var(--shadow)}
+.qbox{border-radius:22px; padding:38px 28px; position:relative; min-height:260px; background:linear-gradient(180deg,#f0f6ff,#fff);
+  box-shadow: inset 0 0 0 4px #0b61a4, inset 0 0 0 12px rgba(11,97,164,.15)}
+.qbox:before{content:"“"; position:absolute; left:-12px; top:-24px; font:900 120px/1 "Georgia"; color:#0b61a4}
+.qbox:after{content:"”"; position:absolute; right:8px; bottom:-34px; font:900 120px/1 "Georgia"; color:#0b61a4}
+.qbox__title{ font-weight:800; font-size:26px; margin-bottom:10px }
+
+/* -------------------------------------------------------------------------- */
+/* 21) FEED LABEL                                                             */
+/* -------------------------------------------------------------------------- */
+.feed-label{ position:relative; display:inline-block; color:#fff; font-weight:800; letter-spacing:.3px; margin:10px 0 18px; transform:translateX(-6px) }
+.feed-label span{
+  display:inline-block; padding:14px 20px; border-radius:10px; background:#3e6aa0;
+  clip-path:polygon(0 0, 92% 0, 100% 50%, 92% 100%, 0 100%, 6% 50%)
+}
+.feed-label:after{ content:""; position:absolute; left:10px; bottom:-8px; width:64px; height:10px; background:#283a55; border-radius:4px }
+
+/* ========================================================================== */
+/* END CSS                                                                    */
+/* ========================================================================== */
 </style>
 </head>
-<body class="bg-gray-100">
-    <!-- Header -->
-    <header class="header">
-    <button class="menu-button" onclick="toggleSidebar()">☰</button>
-        <div class="flex items-center space-x-3">
-            <img src="Ảnh/logo.png" alt="Logo" class="h-10">
-            <h1 class="text-xl font-bold text-white">VŨ TRỤ HỌC TẬP_VAA</h1>
-            <img src="Ảnh/maybay.png" alt="Máy bay" class="airplane-icon">
-        </div>
-        <input type="text" id="search-bar" placeholder="🔍 Tìm kiếm lớp, tài liệu, video..." class="w-1/3 p-2 border rounded-lg shadow-sm">
-        <img src="Ảnh/logotruongvaa.png" alt="Logo Trường" class="h-10">
-    </header>
+<body>
 
-    <div class="flex">
-        <!-- Sidebar -->
-        <nav class="sidebar" id="sidebar">
-            <ul class="space-y-4">
-                <li onclick="showSection('home')">🏠 Trang Chủ</li>
-                <li onclick="showSection('vaa')">📚 Tài Liệu Học Tập VAA</li>
-                <li onclick="showSection('other')">📖 Các Khóa Học Hay</li>
-                <li onclick="showSection('videos')">🎥 FeedBack</li>
-            </ul>
-        </nav>
-        <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
-        <!-- Main Content -->
-        <main class="w-4/5 p-6">
-            <!-- Trang chủ -->
-            <div id="home">
-                <h2 class="text-2xl font-semibold mb-4">📺 Video ôn thi</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <iframe class="w-full h-60" src="https://www.youtube.com/embed/LLI7ynccjJU" frameborder="0" allowfullscreen></iframe>
-                    <iframe class="w-full h-60" src="https://www.youtube.com/embed/Oahag8GhAJ0?si=CLSk2mDtFVuJSRZx" frameborder="0" allowfullscreen></iframe>
-                </div>
-                <h2 class="text-2xl font-semibold mt-6 mb-4">📖 Các khóa học</h2>
-                <p>Danh sách các khóa học sẽ được cập nhật tại đây.</p>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-                    <a href="xstk.html" class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" style="background-image: url('Ảnh/XSTK.png'); background-size: contain; height: 200px; width: 300%;">
-    <h2>KHÓA HỌC XÁC SUẤT THỐNG KÊ</h2>
+<!-- ====================================================================== -->
+<!-- HEADER                                                                 -->
+<!-- ====================================================================== -->
+<header class="header" role="banner">
+  <div class="header__bar">
+    <a class="brand" href="#home" aria-label="Trang chủ">
+      <div class="brand__logo" aria-hidden="true">
+        <!-- VT monogram giữ nguyên style -->
+        <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M13 21c0-5.5 4.5-10 10-10h18c5.5 0 10 4.5 10 10v22c0 5.5-4.5 10-10 10H23c-5.5 0-10-4.5-10-10V21Zm9.5 2h5.3l4.8 18h-5l-5.1-18Zm21.9 0h5.1l-9.4 18h-5l9.3-18Z"/></svg>
+      </div>
+      <div class="brand__text">
+        <div class="brand__title">VŨ TRỤ</div>
+        <div class="brand__subtitle">HỌC TẬP</div>
+      </div>
+    </a>
+
+    <button class="nav-toggle" aria-controls="mainnav" aria-expanded="false" aria-label="Mở menu">☰ Menu</button>
+
+    <nav id="mainnav" class="nav" role="navigation" aria-label="Chính">
+      <a href="#home" class="is-active">HOME</a>
+      <a href="#courses">KHÓA HỌC</a>
+      <a href="#vaa">TÀI LIỆU VAA</a>
+      <a href="#feed">FEED</a>
+    </nav>
+
+    <form class="search" role="search" aria-label="Tìm kiếm">
+      <input id="siteSearch" type="search" placeholder="Tìm khóa học, tài liệu..." aria-label="Tìm kiếm nội dung">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 21l-4.35-4.35m0 0A7 7 0 105.65 5.65a7 7 0 0011 11z"/></svg>
+    </form>
+  </div>
+</header>
+
+<!-- Live region cho slider announce -->
+<div id="live" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
+
+<!-- ====================================================================== -->
+<!-- MAIN                                                                    -->
+<!-- ====================================================================== -->
+<main id="home" class="section container" role="main">
+
+  <!-- =============================== HERO / SLIDER ====================== -->
+  <section class="hero reveal" aria-roledescription="carousel" aria-label="Thông điệp nổi bật" data-slider>
+    <div class="hero__row">
+      <div class="hero__book" aria-hidden="true">
+        <!-- mở sách giữ nguyên phong cách -->
+        <svg viewBox="0 0 256 256" fill="none">
+          <title>Sách mở</title>
+          <path d="M28 76c56-26 94-7 100 0v116c-6-7-44-26-100 0V76Z" fill="#ffe0b2" stroke="#b26a00" stroke-width="6"/>
+          <path d="M228 76c-56-26-94-7-100 0v116c6-7 44-26 100 0V76Z" fill="#fff3e0" stroke="#b26a00" stroke-width="6"/>
+          <path d="M128 76v116" stroke="#b26a00" stroke-width="6"/>
+        </svg>
+      </div>
+
+      <!-- Slides -->
+      <div class="hero__slides" role="group">
+        <article class="hero__slide is-active" role="group" aria-roledescription="slide" aria-label="1 / 3">
+          <h1 class="section__title">Ở đây chúng tôi có<br> TÀI LIỆU <span style="color:#0b61a4">FREE</span></h1>
+          <p class="lead">Các tài liệu phù hợp cho việc học tập, ôn thi, đặc biệt một số đề thi giữa kì &amp; cuối kì.</p>
+        </article>
+
+        <article class="hero__slide" role="group" aria-roledescription="slide" aria-label="2 / 3">
+          <h1 class="section__title">KHÓA HỌC<br> <span style="color:#ff9800">MIỄN PHÍ</span> &amp; ƯU ĐÃI</h1>
+          <p class="lead">Nhiều khóa học mở tuyển sinh, có cả khóa miễn phí và hỗ trợ tài liệu đi kèm.</p>
+        </article>
+
+        <article class="hero__slide" role="group" aria-roledescription="slide" aria-label="3 / 3">
+          <h1 class="section__title">ĐỊNH HƯỚNG<br> DẠY &amp; HỌC</h1>
+          <p class="lead">Tập trung vào kiến thức cốt lõi, phương pháp học thông minh, giúp bạn tự tin hơn khi lên lớp.</p>
+        </article>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="hero__arrows" aria-hidden="false">
+      <button class="hero__arrow" data-prev aria-label="Slide trước" title="Trước">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M15 6l-6 6 6 6"/></svg>
+      </button>
+      <button class="hero__arrow" data-next aria-label="Slide sau" title="Sau">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+
+    <!-- Dots -->
+    <div class="hero__dots mt-12" role="tablist" aria-label="Chọn slide">
+      <button class="dot is-active" role="tab" aria-selected="true" aria-controls="slide1" tabindex="0"></button>
+      <button class="dot" role="tab" aria-selected="false" aria-controls="slide2" tabindex="-1"></button>
+      <button class="dot" role="tab" aria-selected="false" aria-controls="slide3" tabindex="-1"></button>
+    </div>
+  </section>
+
+  <!-- =============================== INTRO BOX =========================== -->
+  <section class="mt-32">
+    <span class="badge-tab">GIỚI THIỆU</span>
+    <div class="box reveal">
+      <h3 class="section__title" style="font-size:28px">Hệ thống cung cấp, cập nhật &amp; đăng tải tài liệu học</h3>
+      <p class="lead">Bao gồm: tài liệu PDF, video bài giảng, đề luyện tập, và các khóa học giá tốt cho sinh viên VAA &amp; các trường liên quan.</p>
+      <div class="card__meta mt-12">
+        <span class="badge">PDF</span>
+        <span class="badge">Video</span>
+        <span class="badge">Đề thi</span>
+      </div>
+    </div>
+  </section>
+
+    <!-- =============================== COURSES ============================= -->
+  <section id="courses" class="section mt-60">
+    <h2 class="section__title">Khóa học</h2>
+    <p class="lead">Hiện tại đang mở khóa học Xác suất - Thống kê.</p>
+
+    <div class="grid grid-2 mt-20" id="courseGrid">
+      <!-- Chỉ giữ lại khóa học Xác suất - Thống kê -->
+      <article class="card reveal" data-tags="math">
+        <div class="card__frame" 
+             style="background:url('Ảnh/XSTK.png') center/contain no-repeat; height:320px;">
+        </div>
+        <h3 class="mt-16">Xác suất - Thống kê</h3>
+        <p class="small mt-8">Combo tài liệu + bài tập mức vừa/khó</p>
+        <div class="card__meta">
+          <span class="badge">Toán</span>
+          <span class="badge">Ưu đãi</span>
+        </div>
+        <button class="card__ribbon" data-open="reg" data-course="Xác suất - Thống kê">
+          ĐĂNG KÝ NGAY
+        </button>
+      </article>
+    </div>
+  </section>
+
+  <!-- =============================== LIBRARY (TÀI LIỆU VAA) ============= -->
+  <section id="vaa" class="section mt-60">
+    <h2 class="section__title">Tài liệu VAA</h2>
+    <p class="lead">Tổng hợp tài liệu học tập cho sinh viên VAA, <b>miễn phí</b>.</p>
+
+    <div class="tabs" role="tablist" aria-label="Danh mục tài liệu">
+      <button class="tab" role="tab" aria-selected="true" data-tab="csn">CƠ SỞ NGÀNH</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="llct">ĐẠI CƯƠNG – LLCT</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="math">TÍNH TOÁN – TOÁN NC</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="opt">HỌC PHẦN TỰ CHỌN</button>
+    </div>
+
+    <div class="grid grid-2 mt-20" id="libGrid">
+      <!-- CSN -->
+<a href="https://drive.google.com/drive/folders/17AJDLzavALUYS0F0e3UG5j4pQ1nx6ZVC?usp=drive_link" target="_blank">
+  <article class="card reveal lib" data-cat="csn">
+    <h3 class="mb-12">Cơ sở ngành – Chuyên ngành</h3>
+    <div class="card__frame" style="background:url('Ảnh/CSNCN.png') center/cover no-repeat; height:220px;"></div>
+    <div class="card__meta"><span class="badge">PDF</span><span class="badge">Slide</span></div>
+  </article>
 </a>
-                </div>
-            </div>
 
-            <!-- Tài liệu học tập VAA -->
-            <div id="vaa" class="hidden">
-                <h2 class="text-2xl font-semibold mb-4">📚 Tài Liệu Học Tập VAA</h2>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    <a href="https://drive.google.com/drive/folders/17AJDLzavALUYS0F0e3UG5j4pQ1nx6ZVC?usp=drive_link?usp=drive_link" class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc" style="background-image: url('Ảnh/CSNCN.png'); height: 150px;">
-                       <h2>CƠ SỞ NGÀNH - CHUYÊN NGÀNH</h2>
-                    </a>
-                    <a href="https://drive.google.com/drive/folders/1nCmi2G2Q5p4zGInQnHZkyIaWtGn6zbcL?usp=drive_link?usp=drive_link" class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc" style="background-image: url('Ảnh/LLCT.png'); height: 150px;">
-                        <h2>ĐẠI CƯƠNG - LÝ LUẬN CHÍNH TRỊ</h2>
-                    </a>
-                    <a href="https://drive.google.com/drive/folders/1nFz7-YdMi9xH1J3YWb0YqG6QqyfJtqvV?usp=drive_link?usp=drive_link" class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc" style="background-image: url('Ảnh/HPTC.png'); height: 150px;">
-                        <h2>HỌC PHẦN TỰ CHỌN </h2>
-                    </a>
-                    <a href="https://drive.google.com/drive/folders/1nHlA3AxANdaqMlOO3xVRqInuPW85pMLM?usp=drive_link?usp=drive_link" class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc" style="background-image: url('Ảnh/TOANNC.png'); height: 150px;">
-                        <h2>TÍNH TOÁN - TOÁN NÂNG CAO </h2>
-                    </a>
-                </div>
-                <p id="no-result" class="text-red-500 hidden">Không tìm thấy kết quả!</p>
-            </div>
+<!-- LLCT -->
+<a href="https://drive.google.com/drive/folders/1nCmi2G2Q5p4zGInQnHZkyIaWtGn6zbcL?usp=drive_link" target="_blank">
+  <article class="card reveal lib" data-cat="llct" >
+    <h3 class="mb-12">Đại cương – Lý luận chính trị</h3>
+    <div class="card__frame" style="background:url('Ảnh/LLCT.png') center/cover no-repeat; height:220px;"></div>
+    <div class="card__meta"><span class="badge">Giáo trình</span><span class="badge">Tổng hợp</span></div>
+  </article>
+</a>
 
-            <!-- Các Khóa Học Hay -->
-            <div id="other" class="hidden">
-    <h2 class="text-2xl font-semibold mb-4">📖 Các Khóa Học Hay</h2>
-    
-    <!-- Thêm menu danh mục -->
-    <div class="category-menu mb-6">
-        <button class="category-btn" onclick="showCategory('office')">🖥️ Tin học văn phòng</button>
-        <button class="category-btn" onclick="showCategory('programming')">💻 Lập trình</button>
-        <button class="category-btn" onclick="showCategory('language')">🌎 Ngoại ngữ</button>
-        <button class="category-btn" onclick="showCategory('technology')">🤖 Công nghệ</button>
+<!-- MATH -->
+<a href="https://drive.google.com/drive/folders/1nHlA3AxANdaqMlOO3xVRqInuPW85pMLM?usp=drive_link" target="_blank">
+  <article class="card reveal lib" data-cat="math" >
+    <h3 class="mb-12">Tính toán – Toán nâng cao</h3>
+    <div class="card__frame" style="background:url('Ảnh/TOANNC.png') center/cover no-repeat; height:220px;"></div>
+    <div class="card__meta"><span class="badge">Bài tập</span><span class="badge">Lý thuyết</span></div>
+  </article>
+</a>
+
+<!-- OPT -->
+<a href="https://drive.google.com/drive/folders/1nFz7-YdMi9xH1J3YWb0YqG6QqyfJtqvV?usp=drive_link" target="_blank">
+  <article class="card reveal lib" data-cat="opt" >
+    <h3 class="mb-12">Học phần tự chọn</h3>
+    <div class="card__frame" style="background:url('Ảnh/HPTC.png') center/cover no-repeat; height:220px;"></div>
+    <div class="card__meta"><span class="badge">Đa ngành</span><span class="badge">Gợi ý</span></div>
+  </article>
+</a>
+
+    </div>
+  <section id="other" class="section mt-60">
+  <h2 class="section__title">📖 Các Khóa Học Hay</h2>
+
+  <!-- Tabs -->
+  <div class="tabs" role="tablist">
+    <button class="tab active" data-tab="office">Tin học văn phòng</button>
+    <button class="tab" data-tab="programming">Lập trình</button>
+    <button class="tab" data-tab="language">Ngoại ngữ</button>
+    <button class="tab" data-tab="technology">Công nghệ</button>
+  </div>
+
+  <!-- Danh mục Tin học văn phòng -->
+  <div class="tab-content office active grid grid-3 mt-20">
+    <a href="https://drive.google.com/drive/folders/1l1IKaOT1BRuHBrpRiBQ-IgSlVfleHz_Y?usp=drive_link" target="_blank">
+      <article class="card">
+        <div class="card__frame" style="background:url('Ảnh/excel.png') center/cover no-repeat; height:220px;"></div>
+        <h3 class="mt-12">EXCEL PRO</h3>
+      </article>
+    </a>
+    <a href="https://drive.google.com/drive/folders/15-fOtCGM05vq_mW-uo_4ToB25gLSbYqt?usp=drive_link" target="_blank">
+      <article class="card">
+        <div class="card__frame" style="background:url('Ảnh/word.png') center/cover no-repeat; height:220px;"></div>
+        <h3 class="mt-12">WORD PRO</h3>
+      </article>
+    </a>
+    <a href="https://drive.google.com/drive/folders/1VLOg45rrkMoP1R_dqPVzeR69MaW_PcoL?usp=drive_link" target="_blank">
+      <article class="card">
+        <div class="card__frame" style="background:url('Ảnh/photoshop.png') center/cover no-repeat; height:220px;"></div>
+        <h3 class="mt-12">PHOTOSHOP UX/UI</h3>
+      </article>
+    </a>
+  </div>
+
+  <!-- Danh mục Lập trình -->
+  <div class="tab-content programming grid grid-3 mt-20 hidden">
+    <a href="https://drive.google.com/drive/folders/1UEIYHCM1bb4hZVsqwtbdvTAimYtxmWL2?usp=drive_link" target="_blank">
+      <article class="card">
+        <div class="card__frame" style="background:url('Ảnh/python.png') center/cover no-repeat; height:220px;"></div>
+        <h3 class="mt-12">Lập trình Python</h3>
+      </article>
+    </a>
+    <a href="https://drive.google.com/drive/folders/1lwMJyDU-ca3KmzVGZi3bT1UUMDClBVC-?usp=drive_link" target="_blank">
+      <article class="card">
+        <div class="card__frame" style="background:url('Ảnh/ccong.png') center/cover no-repeat; height:220px;"></div>
+        <h3 class="mt-12">Lập trình C++</h3>
+      </article>
+    </a>
+    <a href="https://drive.google.com/drive/folders/10Z4BDlsHYLAQ1JQXVA9gMLW4KMqU1t0z?usp=drive_link" target="_blank">
+      <article class="card">
+        <div class="card__frame" style="background:url('Ảnh/c.png') center/cover no-repeat; height:220px;"></div>
+        <h3 class="mt-12">Lập trình C</h3>
+      </article>
+    </a>
+  </div>
+
+  <!-- Danh mục Ngoại ngữ -->
+  <div class="tab-content language grid grid-3 mt-20 hidden">
+    <a href="https://drive.google.com/drive/folders/1uZhRb-26y3-VtKJLonVcx_Xqo6WaQkoX?usp=drive_link" target="_blank">
+      <article class="card">
+        <div class="card__frame" style="background:url('Ảnh/toeic.png') center/cover no-repeat; height:220px;"></div>
+        <h3 class="mt-12">TOEIC</h3>
+      </article>
+    </a>
+    <a href="https://drive.google.com/drive/folders/1aOj_ypgg6xJnS0a7Vzit863esVn--DT0?usp=drive_link" target="_blank">
+      <article class="card">
+        <div class="card__frame" style="background:url('Ảnh/ielts.png') center/cover no-repeat; height:220px;"></div>
+        <h3 class="mt-12">IELTS (4 kỹ năng)</h3>
+      </article>
+    </a>
+  </div>
+
+  <!-- Danh mục Công nghệ -->
+  <div class="tab-content technology grid grid-3 mt-20 hidden">
+    <a href="https://drive.google.com/drive/folders/10u5M-6H3sQdKx-E4aURvbJ1C4l5MrmsJ?usp=drive_link" target="_blank">
+      <article class="card">
+        <div class="card__frame" style="background:url('Ảnh/machine.png') center/cover no-repeat; height:220px;"></div>
+        <h3 class="mt-12">Machine Learning</h3>
+      </article>
+    </a>
+    <a href="https://drive.google.com/drive/folders/1hxw1S2YdZDbKa-CZh90edC3dvdbyxL_u?usp=drive_link" target="_blank">
+      <article class="card">
+        <div class="card__frame" style="background:url('Ảnh/robotics.png') center/cover no-repeat; height:220px;"></div>
+        <h3 class="mt-12">Robotics Căn bản</h3>
+      </article>
+    </a>
+    <a href="https://drive.google.com/drive/folders/15-fOtCGM05vq_mW-uo_4ToB25gLSbYqt?usp=drive_link" target="_blank">
+      <article class="card">
+        <div class="card__frame" style="background:url('Ảnh/canhtay.png') center/cover no-repeat; height:220px;"></div>
+        <h3 class="mt-12">Điều khiển Cánh tay Robot</h3>
+      </article>
+    </a>
+  </div>
+</section>
+
+</section>
+  <!-- =============================== FEED ================================ -->
+  <section id="feed" class="section mt-60">
+    <div class="achv reveal">
+      <div class="qbox">
+        <div class="qbox__title">BẢNG THÀNH TÍCH HỌC VIÊN</div>
+        <p class="lead">Tổng hợp điểm số, chứng chỉ &amp; cảm nhận của học viên sau khóa học.</p>
+      </div>
     </div>
 
-    <!-- Danh mục Tin học văn phòng -->
-    <div id="office" class="course-category active">
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <a href="https://drive.google.com/drive/folders/1l1IKaOT1BRuHBrpRiBQ-IgSlVfleHz_Y?usp=drive_link?usp=drive_link?usp=drive_link" 
-               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
-               style="background-image: url('Ảnh/excel.png'); height: 150px;">
-                <h2>EXCEL PRO</h2>
-            </a>
-            <a href="https://drive.google.com/drive/folders/15-fOtCGM05vq_mW-uo_4ToB25gLSbYqt?usp=drive_link" 
-               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
-               style="background-image: url('Ảnh/word.png'); height: 150px;">
-                <h2>WORD PRO</h2>
-            </a>
-            <a href="https://drive.google.com/drive/folders/1VLOg45rrkMoP1R_dqPVzeR69MaW_PcoL?usp=drive_link" 
-               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
-               style="background-image: url('Ảnh/photoshop.png'); height: 150px;">
-                <h2>PHOTOSHOP THIẾT KẾ UX/UI</h2>
-            </a>
-        </div>
+    <div class="mt-32">
+      <div class="feed-label"><span>HÌNH ẢNH FEED</span></div>
+      <div class="feed" id="feedWrap">
+        <!-- ảnh demo từ placeholder (triển khai thật thay src bằng ảnh của bạn) -->
+        <img class="reveal" loading="lazy" src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=1200&auto=format&fit=crop" alt="Lớp học">
+        <img class="reveal" loading="lazy" src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&auto=format&fit=crop&w=1200" alt="Ghi chú học tập">
+        <img class="reveal" loading="lazy" src="https://images.unsplash.com/photo-1513258496099-48168024aec0?q=80&auto=format&fit=crop&w=1200" alt="Sinh viên làm việc nhóm">
+        <img class="reveal" loading="lazy" src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?q=80&auto=format&fit=crop&w=1200" alt="Thảo luận">
+        <img class="reveal" loading="lazy" src="https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?q=80&auto=format&fit=crop&w=1200" alt="Chứng chỉ">
+        <img class="reveal" loading="lazy" src="https://images.unsplash.com/photo-1523245967-755d956b24bb?q=80&auto=format&fit=crop&w=1200" alt="Buổi học">
+      </div>
     </div>
+  </section>
 
-    <!-- Danh mục Lập trình -->
-    <div id="programming" class="course-category">
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <a href="https://drive.google.com/drive/folders/1UEIYHCM1bb4hZVsqwtbdvTAimYtxmWL2?usp=drive_link" 
-               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
-               style="background-image: url('Ảnh/python.png'); height: 150px;">
-                <h2>LẬP TRÌNH PYTHON</h2>
-            </a>
-            <a href="https://drive.google.com/drive/folders/1lwMJyDU-ca3KmzVGZi3bT1UUMDClBVC-?usp=drive_link" 
-               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
-               style="background-image: url('Ảnh/ccong.png'); height: 150px;">
-                <h2>LẬP TRÌNH C++</h2>
-            </a>
-            <a href="https://drive.google.com/drive/folders/10Z4BDlsHYLAQ1JQXVA9gMLW4KMqU1t0z?usp=drive_link" 
-               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
-               style="background-image: url('Ảnh/c.png'); height: 150px;">
-                <h2>LẬP TRÌNH C</h2>
-            </a>
-            <a href="https://drive.google.com/drive/folders/1xrscrhDX-jf9rT4iRN4ItzkeN6sYTfzi?usp=drive_link" 
-               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
-               style="background-image: url('Ảnh/laravel.png'); height: 150px;">
-                <h2>LẬP TRÌNH LARAVEL</h2>
-            </a>
-            <a href="https://drive.google.com/drive/folders/18GbDdicVlluQH1BEQElvJpddv86VWIL1?usp=drive_link" 
-               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
-               style="background-image: url('Ảnh/java.png'); height: 150px;">
-                <h2>JAVASCRIPT</h2>
-            </a>
-        </div>
-    </div>
+</main>
 
-    <!-- Danh mục Ngoại ngữ -->
-    <div id="language" class="course-category">
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <a href="https://drive.google.com/drive/folders/1uZhRb-26y3-VtKJLonVcx_Xqo6WaQkoX?usp=drive_link" 
-               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
-               style="background-image: url('Ảnh/toeic.png'); height: 150px;">
-                <h2>TOEIC</h2>
-            </a>
-            <a href="https://drive.google.com/drive/folders/1aOj_ypgg6xJnS0a7Vzit863esVn--DT0?usp=drive_link" 
-               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
-               style="background-image: url('Ảnh/ielts.png'); height: 150px;">
-                <h2>IELTS (4 Kĩ Năng)</h2>
-            </a>
-        </div>
-    </div>
-
-    <!-- Danh mục Công nghệ -->
-    <div id="technology" class="course-category">
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <a href="https://drive.google.com/drive/folders/10u5M-6H3sQdKx-E4aURvbJ1C4l5MrmsJ?usp=drive_link" 
-               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
-               style="background-image: url('Ảnh/machine.png'); height: 150px;">
-                <h2>MACHINE LEARNING</h2>
-            </a>
-            <a href="https://drive.google.com/drive/folders/1hxw1S2YdZDbKa-CZh90edC3dvdbyxL_u?usp=drive_link" 
-               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
-               style="background-image: url('Ảnh/robotics.png'); height: 150px;">
-                <h2>ROBOTICS CĂN BẢN</h2>
-            </a>
-            <a href="https://drive.google.com/drive/folders/15-fOtCGM05vq_mW-uo_4ToB25gLSbYqt?usp=drive_link" 
-               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
-               style="background-image: url('Ảnh/canhtay.png'); height: 150px;">
-                <h2>ĐIỀU KHIỂN CÁNH TAY ROBOT</h2>
-            </a>
-            <a href="https://drive.google.com/drive/folders/1Bj6OP16za8qkBIsR7caV9aGtTmmwWN9H?usp=drive_link" 
-               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
-               style="background-image: url('Ảnh/linux.png'); height: 150px;">
-                <h2>HỆ ĐIỀU HÀNH LINUX</h2>
-            </a>
-            <a href="https://drive.google.com/drive/folders/1hUzpGyFa8UAbUNtPjNGiBXW3EzRlOEpr?usp=drive_link" 
-               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
-               style="background-image: url('Ảnh/fullstack.png'); height: 150px;">
-                <h2>FULLSTACK MEVN</h2>
-            </a>
-            <a href="https://drive.google.com/drive/folders/11sWARAJS9pZx8rMdpTVskUy8sYchteGh?usp=drive_link" 
-               class="block bg-cover bg-center rounded-lg shadow-lg p-4 text-xl mon-hoc no-overlay" 
-               style="background-image: url('Ảnh/frontend.png'); height: 150px;">
-                <h2>FRONTEND REACTJS</h2>
-            </a>
-        </div>
-    </div>
-
-    <p id="no-result" class="text-red-500 hidden">Không tìm thấy kết quả!</p>
+<!-- =============================== FAB CONTACT ============================ -->
+<div class="fab" aria-label="Liên hệ nhanh">
+  <a class="call" href="tel:+84999999999" title="Gọi tư vấn">
+    <span class="tooltip">Gọi ngay</span>
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 006.6 6.6l2.2-2.2a1 1 0 011.1-.24 11.5 11.5 0 003.6.6 1 1 0 011 1v3.6a1 1 0 01-1 1A17.1 17.1 0 012 5a1 1 0 011-1h3.6a1 1 0 011 1 11.5 11.5 0 00.6 3.6 1 1 0 01-.24 1.1l-2.36 2.14z"/></svg>
+  </a>
+  <a class="chat" href="https://zalo.me" target="_blank" rel="noopener" title="Nhắn tin Zalo">
+    <span class="tooltip">Nhắn Zalo</span>
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M2 4a2 2 0 012-2h16a2 2 0 012 2v11a2 2 0 01-2 2H8l-5 5V4z"/></svg>
+  </a>
 </div>
 
-            <!-- Feedback -->
-            <div id="videos" class="hidden">
-                <h2 class="text-2xl font-semibold mb-4">🎥 FeedBack</h2>
-                <iframe class="w-full h-40" src="https://youtu.be/Oahag8GhAJ0?si=_X2zuQTQQ31HI6KS"></iframe>
-            </div>
-        </main>
+<!-- =============================== FOOTER ================================= -->
+<footer class="footer">© 2025 Vũ Trụ Học Tập • Designed w/ ❤</footer>
+
+<!-- =============================== MODAL REGISTRATION ===================== -->
+<div class="modal-backdrop" id="regModal" aria-hidden="true" aria-labelledby="regTitle" role="dialog">
+  <div class="modal" role="document">
+    <div class="modal__head">
+      <div class="modal__title" id="regTitle">Đăng ký tư vấn</div>
+      <button class="modal__close" data-close aria-label="Đóng">×</button>
     </div>
+    <div class="modal__body">
+      <div class="modal__row">
+        <div class="input">
+          <label for="regName">Họ tên</label>
+          <input id="regName" type="text" placeholder="Nguyễn Văn A" autocomplete="name" required>
+        </div>
+        <div class="input">
+          <label for="regContact">Facebook/Zalo/Email</label>
+          <input id="regContact" type="text" placeholder="https://facebook.com/..." required>
+        </div>
+        <div class="input">
+          <label for="regCourse">Khoá học quan tâm</label>
+          <input id="regCourse" type="text" placeholder="Ví dụ: Toán Ứng Dụng">
+        </div>
+        <div class="input">
+          <label for="regNote">Ghi chú</label>
+          <textarea id="regNote" rows="3" placeholder="Nội dung nhờ hỗ trợ..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal__actions">
+      <button class="btn btn--ghost" data-close>Hủy</button>
+      <button class="btn btn--primary" id="regSubmit">Gửi đăng ký</button>
+    </div>
+  </div>
+</div>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white text-center p-4 mt-6">
-        © 2025 Thư viện tài liệu | Designed by ChatGPT
-    </footer>
+<!-- =============================== TOAST CONTAINER ======================== -->
+<div class="toast-wrap" id="toastWrap" aria-live="polite" aria-atomic="false"></div>
 
-    <script>
-        // Hiển thị phần được chọn và ẩn các phần khác
-        function showSection(sectionId) {
-            document.querySelectorAll('main > div').forEach(div => {
-                div.classList.add('hidden');
-            });
-            document.getElementById(sectionId).classList.remove('hidden');
-        }
-    </script>
-
-    <script>
-        // Xử lý tìm kiếm
-        document.getElementById("search-bar").addEventListener("input", function() {
-            let searchText = this.value.toLowerCase();
-            let items = document.querySelectorAll(".mon-hoc");
-            let found = false;
-
-            items.forEach(item => {
-                let text = item.innerText.toLowerCase();
-                if (text.includes(searchText)) {
-                    item.classList.remove("hidden");
-                    found = true;
-                } else {
-                    item.classList.add("hidden");
-                }
-            });
-
-            let noResult = document.getElementById("no-result");
-            if (!found) {
-                noResult.classList.remove("hidden");
-            } else {
-                noResult.classList.add("hidden");
-            }
-        });
-    </script>
-<!-- Thêm đoạn script này vào cuối file index.html -->
 <script>
-    // Kiểm tra URL parameter hoặc session storage khi trang được tải
-    document.addEventListener("DOMContentLoaded", function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        const sectionToShow = urlParams.get('section');
+/* ========================================================================== */
+/*  JS: VAA PRO                                                               */
+/*  - Mobile nav toggle                                                       */
+/*  - Active link on scroll                                                   */
+/*  - Slider (A11Y + mouse + keyboard + touch + autoplay + pause on hover)    */
+/*  - Search (debounced) + Filter (courses)                                   */
+/*  - Reveal on scroll (IntersectionObserver)                                  */
+/*  - Tabs switch (library)                                                   */
+/*  - Modal register + Validation + Toast                                     */
+/*  - Lazy skeleton demo                                                      */
+/*  - Small helpers: throttle, debounce, qs/qsa                               */
+/* ========================================================================== */
 
-        if (sectionToShow) {
-            showSection(sectionToShow);
-        } else {
-            showSection('home'); // Mặc định hiển thị trang chủ
-        }
-    });
+/* ----------------------------- Helpers ----------------------------------- */
+const qs = (s, sc=document) => sc.querySelector(s);
+const qsa = (s, sc=document) => [...sc.querySelectorAll(s)];
+const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+const on = (el, ev, fn, opt) => el.addEventListener(ev, fn, opt);
+const off = (el, ev, fn, opt) => el.removeEventListener(ev, fn, opt);
 
-    // Hàm hiển thị phần được chọn
-    function showSection(sectionId) {
-    // Ẩn tất cả các phần
-    document.querySelectorAll('main > div').forEach(div => {
-        div.classList.add('hidden');
-    });
-
-    // Hiện phần được chọn
-    const section = document.getElementById(sectionId);
-    if (section) {
-        section.classList.remove('hidden');
+function throttle(fn, wait=120){
+  let last=0, t;
+  return function(...args){
+    const now = Date.now();
+    if(now - last >= wait){
+      last = now;
+      fn.apply(this,args);
+    } else {
+      clearTimeout(t);
+      t = setTimeout(()=>{ last = Date.now(); fn.apply(this,args); }, wait - (now-last));
     }
-
-    // Nếu là phần "other" thì tự động kích hoạt "Tin học văn phòng"
-    if (sectionId === 'other') {
-        showCategory('office');
-    }
+  }
 }
+function debounce(fn, wait=240){
+  let t;
+  return function(...args){
+    clearTimeout(t);
+    t = setTimeout(()=>fn.apply(this,args), wait);
+  }
+}
+
+/* ----------------------------- Mobile nav -------------------------------- */
+const toggleBtn = qs('.nav-toggle');
+const nav = qs('#mainnav');
+on(toggleBtn,'click', ()=>{
+  const open = nav.classList.toggle('is-open');
+  toggleBtn.setAttribute('aria-expanded', open ? 'true':'false');
+});
+
+/* ----------------------------- Active link on scroll --------------------- */
+const links = qsa('.nav a');
+const sections = links.map(a => qs(a.getAttribute('href')));
+
+const spy = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      // Xóa hết active
+      links.forEach(a => a.classList.remove('is-active'));
+      // Thêm active cho link đang thấy
+      const i = sections.indexOf(entry.target);
+      if (i >= 0) links[i].classList.add('is-active');
+    }
+  });
+}, {
+  threshold: 0.4,  // section hiển thị 40% thì tính
+  rootMargin: "-50px 0px -50px 0px" // tránh bị header che mất
+});
+
+// Gắn observer
+sections.forEach(sec => {
+  if (sec) spy.observe(sec);
+});
+/* ----------------------------- HERO SLIDER ------------------------------- */
+(function Slider(){
+  const root = qs('[data-slider]');
+  if(!root) return;
+
+  const slides = qsa('.hero__slide', root);
+  const dots = qsa('.dot', root);
+  const prev = qs('[data-prev]', root);
+  const next = qs('[data-next]', root);
+  const live = qs('#live');
+  let current = 0, timer=null, hover=false;
+
+  function announce(msg){
+    if(!live) return;
+    live.textContent = msg;
+  }
+
+  function show(i){
+    i = (i + slides.length) % slides.length;
+    slides.forEach((s, idx)=>{
+      s.classList.toggle('is-active', idx === i);
+      s.setAttribute('aria-hidden', idx !== i ? 'true':'false');
+    });
+    dots.forEach((d, idx)=>{
+      d.classList.toggle('is-active', idx === i);
+      d.setAttribute('aria-selected', idx === i ? 'true':'false');
+      d.tabIndex = idx === i ? 0 : -1;
+    });
+    current = i;
+    announce(`Đang hiển thị slide ${i+1} trên ${slides.length}`);
+  }
+
+  function nextSlide(){ show(current+1) }
+  function prevSlide(){ show(current-1) }
+
+  function start(){
+    stop();
+    timer = setInterval(()=>{ if(!hover) nextSlide(); }, 5000);
+  }
+  function stop(){ if(timer) clearInterval(timer) }
+
+  // dots click
+  dots.forEach((dot, idx)=>{
+    on(dot,'click', ()=>{ show(idx); start(); });
+    on(dot,'keydown', e=>{
+      if(e.key==='Enter' || e.key===' '){ e.preventDefault(); show(idx); start(); }
+    });
+  });
+
+  // arrows
+  on(next,'click', ()=>{ nextSlide(); start(); });
+  on(prev,'click', ()=>{ prevSlide(); start(); });
+
+  // hover pause
+  on(root,'mouseenter', ()=>{ hover=true });
+  on(root,'mouseleave', ()=>{ hover=false });
+
+  // keyboard global
+  on(document,'keydown', (e)=>{
+    if(document.activeElement && document.activeElement.closest('input,textarea,select,button,[contenteditable]')) return;
+    if(e.key==='ArrowRight'){ nextSlide(); start(); }
+    if(e.key==='ArrowLeft'){ prevSlide(); start(); }
+  });
+
+  // touch swipe
+  let x0=null, y0=null;
+  on(root,'touchstart', e=>{
+    const t = e.touches[0];
+    x0 = t.clientX; y0=t.clientY;
+  }, {passive:true});
+  on(root,'touchmove', e=>{
+    if(!x0 && !y0) return;
+    const t = e.touches[0];
+    const dx = t.clientX - x0;
+    const dy = t.clientY - y0;
+    if(Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40){
+      if(dx<0) nextSlide(); else prevSlide();
+      x0=y0=null;
+    }
+  }, {passive:true});
+
+  show(0);
+  start();
+})();
+
+/* ----------------------------- SEARCH (debounced) ------------------------ */
+const siteSearch = qs('#siteSearch');
+const courseGrid = qs('#courseGrid');
+function searchSite(q){
+  q = q.trim().toLowerCase();
+  const blocks = qsa('article.card', document);
+  blocks.forEach(b=>{
+    const text = b.textContent.toLowerCase();
+    b.style.display = text.includes(q) ? '' : 'none';
+  });
+}
+if(siteSearch){
+  on(siteSearch,'input', debounce(e=>searchSite(e.target.value), 250));
+}
+
+/* ----------------------------- FILTER (courses) -------------------------- */
+const filterSel = qs('#courseFilter');
+function filterCourses(){
+  const v = filterSel.value;
+  const items = qsa('#courseGrid .card');
+  items.forEach(it=>{
+    const tags = (it.getAttribute('data-tags')||'').split(/\s+/);
+    const ok = v==='all' || tags.includes(v);
+    it.style.display = ok ? '' : 'none';
+  });
+}
+if(filterSel){
+  on(filterSel,'change', filterCourses);
+}
+
+/* ----------------------------- REVEAL ON SCROLL -------------------------- */
+const reveals = qsa('.reveal');
+function checkReveal(){
+  let winH = window.innerHeight;
+  reveals.forEach(el=>{
+    if(el.classList.contains('active')) return;
+    let pos = el.getBoundingClientRect().top;
+    if(pos < winH - 80) el.classList.add('active');
+  });
+}
+on(window,'scroll', throttle(checkReveal, 80));
+on(window,'load', checkReveal);
+
+/* ----------------------------- TABS: scoped for library & courses ------------------ */
+(function initTabs(){
+  const qsLocal = (s, sc=document) => sc.querySelector(s);
+  const qsaLocal = (s, sc=document) => [...sc.querySelectorAll(s)];
+
+  /* ===== 1) Library tabs (#vaa) ===== */
+  const vaaTabGroup = qsLocal('#vaa .tabs');
+  const vaaAnchors = qsaLocal('#libGrid > a'); // ẩn cả <a> thay vì chỉ article
+  if(vaaTabGroup){
+    const buttons = qsaLocal('.tab', vaaTabGroup);
+
+    function setVaaTab(cat){
+      buttons.forEach(b => b.setAttribute('aria-selected', b.dataset.tab === cat ? 'true' : 'false'));
+      vaaAnchors.forEach(a => {
+        const art = a.querySelector('article');
+        if(!art) return;
+        const match = (art.dataset.cat === cat);
+        a.style.display = match ? '' : 'none'; // tránh vùng click rỗng
+        if(match) art.classList.add('active'); else art.classList.remove('active');
+      });
+    }
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        setVaaTab(this.dataset.tab);
+        this.blur(); // tránh focus gây giật
+      });
+    });
+
+    const initial = buttons.find(b => b.getAttribute('aria-selected') === 'true') || buttons[0];
+    if(initial) setVaaTab(initial.dataset.tab);
+  }
+
+  /* ===== 2) Course tabs (#other) ===== */
+  const otherTabGroup = qsLocal('#other .tabs');
+  if(otherTabGroup){
+    const buttons = qsaLocal('.tab', otherTabGroup);
+    const contents = qsaLocal('#other .tab-content');
+
+    function activateCourseTab(btn){
+      buttons.forEach(b => b.classList.remove('active'));
+      contents.forEach(c => c.classList.add('hidden'));
+      btn.classList.add('active');
+      const target = btn.dataset.tab;
+      const el = qsLocal(`#other .tab-content.${target}`);
+      if(el) el.classList.remove('hidden');
+      btn.blur();
+    }
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        activateCourseTab(this);
+      });
+    });
+
+    const initBtn = buttons.find(b => b.classList.contains('active')) || buttons[0];
+    if(initBtn) activateCourseTab(initBtn);
+  }
+})();
+/* ----------------------------- MODAL REGISTER ---------------------------- */
+const regModal = qs('#regModal');
+const regOpenBtns = qsa('[data-open="reg"]');
+const regCloseBtns = qsa('[data-close]');
+const regSubmit = qs('#regSubmit');
+const regName = qs('#regName');
+const regContact = qs('#regContact');
+const regCourse = qs('#regCourse');
+
+function openModal(prefill){
+  regCourse.value = prefill || '';
+  regModal.classList.add('is-open');
+  regModal.setAttribute('aria-hidden','false');
+  regName.focus();
+  trapFocus(regModal);
+}
+function closeModal(){
+  regModal.classList.remove('is-open');
+  regModal.setAttribute('aria-hidden','true');
+  releaseFocus();
+}
+regOpenBtns.forEach(b=>{
+  on(b,'click', ()=>{
+    openModal(b.getAttribute('data-course')||'');
+  });
+});
+regCloseBtns.forEach(b=> on(b,'click', closeModal));
+on(regModal,'click', e=>{ if(e.target === regModal) closeModal() });
+on(document,'keydown', e=>{ if(e.key==='Escape' && regModal.classList.contains('is-open')) closeModal() });
+
+/* focus trap (a11y) */
+let lastFocused = null;
+function trapFocus(modal){
+  lastFocused = document.activeElement;
+  const focusable = qsa('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])', modal)
+                     .filter(el=>!el.hasAttribute('disabled'));
+  const first = focusable[0], last = focusable[focusable.length-1];
+  function cycle(e){
+    if(e.key!=='Tab') return;
+    if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+  }
+  modal.addEventListener('keydown', cycle);
+  modal._cycle = cycle;
+}
+function releaseFocus(){
+  if(lastFocused) lastFocused.focus();
+  if(regModal._cycle) regModal.removeEventListener('keydown', regModal._cycle);
+}
+
+/* ----------------------------- TOAST ------------------------------------- */
+const toastWrap = qs('#toastWrap');
+function toast(msg, type='info', timeout=3500){
+  const el = document.createElement('div');
+  el.className = `toast toast--${type}`;
+  el.innerHTML = `<div>${msg}</div><button class="toast__close" aria-label="Đóng">×</button>`;
+  toastWrap.appendChild(el);
+  const close = ()=>{ el.style.opacity='0'; el.style.transform='translateX(20px)'; setTimeout(()=>el.remove(),240); }
+  on(qs('.toast__close', el),'click', close);
+  setTimeout(close, timeout);
+}
+
+/* ----------------------------- SUBMIT REGISTER --------------------------- */
+on(regSubmit,'click', async ()=>{
+  const name = regName.value.trim();
+  const contact = regContact.value.trim();
+  const course = regCourse.value.trim();
+
+  if(!name || !contact){
+    toast('Vui lòng nhập Họ tên và kênh liên hệ.', 'danger');
+    return;
+  }
+
+  // Tạo FormData để gửi qua Google Apps Script
+  let formData = new FormData();
+  formData.append("name", name);
+  formData.append("contact", contact);
+  formData.append("course", course);
+
+  try {
+    let res = await fetch("https://script.google.com/macros/s/AKfycbxmHxe_ePRK2eDRW0jiIaUYneYPOoYqoFMCRY8zY2fg--QASXHFwMKNxFU50pLlqL_LWg/exec", {
+      method: "POST",
+      body: formData
+    });
+
+    if(res.ok){
+      toast(`✅ Đăng ký thành công! Cảm ơn ${name}.`, 'success');
+      closeModal();
+      regName.value = "";
+      regContact.value = "";
+      regCourse.value = "";
+    } else {
+      toast("⚠️ Có lỗi khi gửi dữ liệu. Thử lại sau!", 'danger');
+    }
+  } catch (err) {
+    console.error(err);
+    toast("🚨 Kết nối thất bại!", 'danger');
+  }
+});
+/* ----------------------------- SKELETON DEMO (lazy) ---------------------- */
+on(window,'load', ()=>{
+  setTimeout(()=>{
+    qsa('[data-skeleton]').forEach(sk=>{
+      sk.classList.remove('skeleton');
+      sk.style.background='url(https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop) center/cover';
+    });
+  }, 800); // giả lập tải data
+});
+
+/* ----------------------------- FEED Lazy Add (optional) ------------------ */
+(function feedEnhance(){
+  const wrap = qs('#feedWrap');
+  if(!('IntersectionObserver' in window) || !wrap) return;
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        // có thể chèn thêm 3 ảnh khi cuộn gần cuối (demo)
+        io.disconnect();
+        const more = [
+          "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&auto=format&fit=crop&w=1200",
+          "https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&auto=format&fit=crop&w=1200",
+          "https://images.unsplash.com/photo-1529336953121-ad3c1cc7f1f4?q=80&auto=format&fit=crop&w=1200"
+        ];
+        more.forEach(src=>{
+          const img = new Image();
+          img.src = src; img.alt = "Khoảnh khắc lớp học";
+          img.loading = "lazy"; img.className = "reveal";
+          wrap.appendChild(img);
+        });
+        checkReveal();
+      }
+    });
+  }, {rootMargin:"200px"});
+  io.observe(wrap.lastElementChild);
+})();
+
+/* ----------------------------- ACCESSIBLE HASH FOCUS --------------------- */
+(function focusHash(){
+  if(location.hash){
+    const t = qs(location.hash);
+    if(t){ t.setAttribute('tabindex','-1'); t.focus(); }
+  }
+})();
+
+/* ========================================================================== */
+/* END JS                                                                     */
+/* ========================================================================== */
 </script>
 <script>
-    // Toggle sidebar với overlay
-    function toggleSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.querySelector('.sidebar-overlay');
-        sidebar.classList.toggle('active');
-        overlay.style.display = sidebar.classList.contains('active') ? 'block' : 'none';
+(function(){
+  const navLinks = [...document.querySelectorAll('.nav a')];
+  const targets  = navLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const headerH  = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 0;
+
+  function setActive(i){
+    navLinks.forEach(l => l.classList.remove('is-active'));
+    if (navLinks[i]) navLinks[i].classList.add('is-active');
+  }
+
+  function onScroll(){
+    const y = window.scrollY + headerH + 2; // bù header
+    let idx = 0;
+    for (let i = 0; i < targets.length; i++){
+      if (y >= targets[i].offsetTop) idx = i;
     }
+    setActive(idx);
+  }
 
-    // Tự động ẩn sidebar khi resize
-    window.addEventListener('resize', function() {
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.querySelector('.sidebar-overlay');
-        
-        if (window.innerWidth > 768) {
-            sidebar.classList.remove('active');
-            sidebar.style.left = '';
-            overlay.style.display = 'none';
-        }
-    });
-
-    // Khởi tạo sidebar khi tải trang
-    window.addEventListener('load', function() {
-        if (window.innerWidth <= 768) {
-            document.getElementById('sidebar').classList.remove('active');
-        }
-    });
-function showCategory(category) {
-    // Ẩn tất cả các danh mục khóa học
-    document.querySelectorAll('.course-category').forEach(div => {
-        div.classList.remove('active');
-    });
-    // Hiển thị danh mục được chọn
-    document.getElementById(category).classList.add('active');
-
-    // Xóa class active khỏi tất cả các nút danh mục
-    document.querySelectorAll('.category-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    // Thêm class active cho nút được chọn
-    document.querySelector(`.category-btn[onclick="showCategory('${category}')"]`).classList.add('active');
-}
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('load', onScroll);
+  window.addEventListener('resize', onScroll);
+  onScroll(); // kích hoạt lần đầu
+})();
 </script>
 </body>
 </html>
